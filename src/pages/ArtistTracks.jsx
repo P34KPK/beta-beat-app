@@ -73,7 +73,7 @@ const ArtistTracks = () => {
             </main>
 
             <div className="fixed bottom-[88px] left-0 right-0 px-4 z-30 max-w-md mx-auto pointer-events-none">
-                <button className="pointer-events-auto w-full bg-primary hover:bg-white/90 active:bg-white/80 text-black font-bold h-14 rounded-full shadow-[0_4px_14px_rgba(255,255,255,0.4)] flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
+                <button onClick={() => navigate('/artist-ab-setup')} className="pointer-events-auto w-full bg-primary hover:bg-white/90 active:bg-white/80 text-black font-bold h-14 rounded-full shadow-[0_4px_14px_rgba(255,255,255,0.4)] flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
                     <span className="material-symbols-outlined">add</span>
                     Add New Track
                 </button>
