@@ -1,11 +1,19 @@
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 import TesterBottomNav from '../components/TesterBottomNav';
 import { useData } from '../context/DataContext';
 
 const TesterHome = () => {
     const navigate = useNavigate();
     const { tracks, artistProfile } = useData();
+    const [showMenu, setShowMenu] = useState(false);
+
+    const handleExit = () => {
+        // Clear session if needed
+        sessionStorage.removeItem('testerCode'); // Start fresh
+        navigate('/tester-access');
+    };
 
     return (
         <motion.div
@@ -19,10 +27,31 @@ const TesterHome = () => {
                 <div className="flex-1">
                     <img src="/beta-beat-logo.png" alt="BETA BEAT" className="h-16 w-auto" />
                 </div>
-                <div className="flex items-center justify-end gap-3">
-                    <button className="flex items-center justify-center size-10 bg-transparent text-slate-900 dark:text-white hover:bg-white hover:text-black border border-white/20 transition-colors">
-                        <span className="material-symbols-outlined">filter_list</span>
+                <div className="flex items-center justify-end gap-3 relative">
+                    <button onClick={() => setShowMenu(!showMenu)} className="flex items-center justify-center size-10 bg-transparent text-slate-900 dark:text-white hover:bg-white hover:text-black border border-white/20 transition-colors z-50 relative">
+                        <span className="material-symbols-outlined">{showMenu ? 'close' : 'menu'}</span>
                     </button>
+
+                    <AnimatePresence>
+                        {showMenu && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9, y: -10 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.9, y: -10 }}
+                                className="absolute top-12 right-0 w-48 bg-black border border-white/20 shadow-xl z-40 flex flex-col p-1"
+                            >
+                                <button onClick={() => navigate('/tester-support')} className="flex items-center gap-3 px-4 py-3 text-left hover:bg-white hover:text-black transition-colors border-b border-white/10 last:border-0">
+                                    <span className="material-symbols-outlined text-sm">help</span>
+                                    <span className="font-mono text-xs uppercase font-bold">Support</span>
+                                </button>
+                                <button onClick={handleExit} className="flex items-center gap-3 px-4 py-3 text-left hover:bg-red-600 hover:text-white hover:border-red-600 transition-colors">
+                                    <span className="material-symbols-outlined text-sm">logout</span>
+                                    <span className="font-mono text-xs uppercase font-bold">Exit Project</span>
+                                </button>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                    {showMenu && <div className="fixed inset-0 z-30" onClick={() => setShowMenu(false)}></div>}
                 </div>
             </div>
 
