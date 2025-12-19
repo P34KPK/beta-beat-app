@@ -196,14 +196,24 @@ const ArtistABSetup = () => {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <label className="text-sm font-bold text-white ml-1">Cover Art Link (Optional)</label>
-                            <input
-                                type="text"
-                                placeholder="Image Address (URL)"
-                                className="w-full bg-surface-dark border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-primary focus:outline-none text-sm"
-                                value={albumCover}
-                                onChange={(e) => setAlbumCover(e.target.value)}
-                            />
+                            <div className="flex justify-between items-center ml-1">
+                                <label className="text-sm font-bold text-white">Cover Art Link (Optional)</label>
+                                {albumCover && albumCover.includes('drive.google.com') && <span className="text-[10px] uppercase font-bold text-green-500 bg-green-900/30 px-2 py-0.5 rounded flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">check</span>Drive Link</span>}
+                            </div>
+                            <div className={`flex items-center gap-2 bg-surface-dark border rounded-xl px-4 py-3 transition-colors ${albumCover && albumCover.includes('drive.google.com') ? 'border-green-500/50' : 'border-zinc-700 focus-within:border-primary'}`}>
+                                <span className="material-symbols-outlined text-zinc-500">image</span>
+                                <input
+                                    type="text"
+                                    placeholder="Paste Drive Link or Image URL"
+                                    className="w-full bg-transparent text-white focus:outline-none text-sm placeholder-zinc-600"
+                                    value={albumCover}
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        const direct = processLink(val);
+                                        setAlbumCover(direct || val);
+                                    }}
+                                />
+                            </div>
                         </div>
 
                         <div className="flex items-center justify-between mt-2">
