@@ -37,9 +37,9 @@ const ArtistDashboard = () => {
             {/* VIP Card Modal */}
             {showInviteCard && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-6" onClick={() => setShowInviteCard(false)}>
-                    <div className="w-full max-w-sm bg-surface-dark border border-white/10 rounded-[2rem] overflow-hidden relative shadow-[0_0_50px_rgba(242,127,13,0.15)] animate-in fade-in zoom-in duration-300" onClick={e => e.stopPropagation()}>
-                        {/* Status Bar Decor */}
-                        <div className="h-2 w-full bg-gradient-to-r from-primary to-orange-600"></div>
+                    <div className="w-full max-w-sm bg-surface-dark border border-white/10 overflow-hidden relative shadow-[0_0_50px_rgba(255,255,255,0.1)] animate-in fade-in zoom-in duration-300" onClick={e => e.stopPropagation()}>
+                        {/* Status Bar Decor - Monochrome */}
+                        <div className="h-1 w-full bg-white"></div>
 
                         <div className="p-8 flex flex-col items-center text-center relative">
                             {/* Background Pattern */}
@@ -47,15 +47,15 @@ const ArtistDashboard = () => {
 
                             {/* Brand - Dominant */}
                             <div className="mb-8 relative w-full flex justify-center mt-4">
-                                <div className="absolute inset-0 bg-primary/10 blur-[60px] rounded-full transform scale-150"></div>
-                                <img src="/beta-beat-logo.png" alt="BETA BEAT" className="relative w-48 object-contain drop-shadow-[0_0_15px_rgba(242,127,13,0.5)]" />
+                                <div className="absolute inset-0 bg-white/5 blur-[60px] rounded-full transform scale-150"></div>
+                                <img src="/beta-beat-logo.png" alt="BETA BEAT" className="relative w-48 object-contain opacity-90 grayscale contrast-125" />
                             </div>
 
-                            <p className="text-zinc-400 text-[10px] font-bold uppercase tracking-[0.3em] mb-8">Official Invitation</p>
+                            <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.3em] mb-8">Official Invitation</p>
 
-                            {/* Artist Section - Inline */}
+                            {/* Artist Section - Inline - Monochrome */}
                             <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-full pr-6 pl-2 py-2 mb-8 backdrop-blur-md">
-                                <div className="size-12 rounded-full border-2 border-primary shadow-lg relative shrink-0">
+                                <div className="size-12 rounded-full border border-white shadow-lg relative shrink-0 grayscale">
                                     <img src={artistProfile.photo} alt="Artist" className="w-full h-full object-cover rounded-full" />
                                 </div>
                                 <div className="text-left">
@@ -64,14 +64,14 @@ const ArtistDashboard = () => {
                                 </div>
                             </div>
 
-                            {/* Code Badge */}
-                            <div className="w-full bg-black/40 rounded-xl p-4 border border-white/5 mb-6">
+                            {/* Code Badge - Monochrome */}
+                            <div className="w-full bg-black border border-white/20 p-4 mb-6">
                                 <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1">Access Code</p>
-                                <p className="text-2xl font-mono font-bold text-primary tracking-widest">{inviteCode}</p>
+                                <p className="text-2xl font-mono font-bold text-white tracking-widest">{inviteCode}</p>
                             </div>
 
-                            {/* Action Buttons */}
-                            <button onClick={handleInvite} className="w-full py-3 rounded-full bg-primary text-black font-bold text-sm shadow-lg shadow-primary/20 hover:bg-orange-600 transition-colors flex items-center justify-center gap-2 mb-2">
+                            {/* Action Buttons - Monochrome */}
+                            <button onClick={handleInvite} className="w-full py-3 bg-white text-black font-bold text-sm hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2 mb-2">
                                 <span className="material-symbols-outlined text-lg">share</span>
                                 Share Invite
                             </button>
