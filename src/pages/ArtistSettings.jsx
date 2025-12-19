@@ -48,7 +48,7 @@ const ArtistSettings = () => {
     return (
         <div className="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden pb-32 max-w-md mx-auto bg-background-light dark:bg-background-dark text-slate-900 dark:text-white">
             <header className="flex items-center justify-between p-4 pb-2 sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-gray-200 dark:border-white/5">
-                <button onClick={() => navigate(-1)} className="flex size-10 shrink-0 items-center justify-center rounded-full active:bg-black/5 dark:active:bg-white/10 transition-colors">
+                <button onClick={() => navigate(-1)} className="flex size-10 shrink-0 items-center justify-center active:bg-black/5 dark:active:bg-white/10 transition-colors">
                     <span className="material-symbols-outlined text-2xl">arrow_back</span>
                 </button>
                 <h2 className="text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">Artist Profile</h2>
@@ -68,7 +68,7 @@ const ArtistSettings = () => {
                                 <span className="material-symbols-outlined text-white text-3xl">add_a_photo</span>
                             </div>
                         </div>
-                        <div className="absolute bottom-0 right-1 bg-primary text-black p-1.5 rounded-full border-2 border-background-dark">
+                        <div className="absolute bottom-0 right-1 bg-primary text-black p-1.5 border-2 border-background-dark">
                             <span className="material-symbols-outlined text-[16px] leading-none">edit</span>
                         </div>
                     </div>
@@ -198,7 +198,7 @@ const ArtistSettings = () => {
                         </div>
 
                         <div className="flex items-center gap-3">
-                            <div className="size-10 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 flex items-center justify-center shrink-0">
+                            <div className="size-10 bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 flex items-center justify-center shrink-0">
                                 <span className="font-bold">DC</span>
                             </div>
                             <input
@@ -217,7 +217,7 @@ const ArtistSettings = () => {
             </main>
 
             <div className="fixed bottom-[88px] left-0 right-0 px-6 z-30 max-w-md mx-auto pointer-events-none">
-                <button onClick={handleSave} className="pointer-events-auto w-full bg-primary hover:bg-white/90 active:bg-white/80 text-black font-bold h-14 rounded-full shadow-[0_4px_14px_rgba(255,255,255,0.4)] flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
+                <button onClick={handleSave} className="pointer-events-auto w-full bg-primary hover:bg-white/90 active:bg-white/80 text-black font-bold h-14 shadow-[0_4px_14px_rgba(255,255,255,0.4)] flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
                     Save Changes
                 </button>
             </div>

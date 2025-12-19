@@ -111,24 +111,24 @@ const ArtistABSetup = () => {
     return (
         <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white h-full min-h-screen flex flex-col overflow-hidden max-w-md mx-auto">
             <header className="flex items-center justify-between p-4 bg-background-light dark:bg-background-dark shrink-0 z-20">
-                <button onClick={() => navigate(-1)} className="text-white/70 hover:text-primary transition-colors flex items-center justify-center size-10 rounded-full active:bg-white/10">
+                <button onClick={() => navigate(-1)} className="text-white/70 hover:text-primary transition-colors flex items-center justify-center size-10 active:bg-white/10">
                     <span className="material-symbols-outlined">close</span>
                 </button>
-                <div className="flex bg-surface-dark rounded-full p-1 border border-white/5">
+                <div className="flex bg-surface-dark p-1 border border-white/5">
                     <button
                         onClick={() => setMode('single')}
-                        className={`text-xs font-bold px-4 py-1.5 rounded-full transition-all ${mode === 'single' ? 'bg-primary text-black' : 'text-zinc-400 hover:text-white'}`}>
+                        className={`text-xs font-bold px-4 py-1.5 transition-all ${mode === 'single' ? 'bg-primary text-black' : 'text-zinc-400 hover:text-white'}`}>
                         Single
                     </button>
                     <button
                         onClick={() => setMode('album')}
-                        className={`text-xs font-bold px-4 py-1.5 rounded-full transition-all ${mode === 'album' ? 'bg-primary text-black' : 'text-zinc-400 hover:text-white'}`}>
+                        className={`text-xs font-bold px-4 py-1.5 transition-all ${mode === 'album' ? 'bg-primary text-black' : 'text-zinc-400 hover:text-white'}`}>
                         Album / EP
                     </button>
                 </div>
                 <button
                     onClick={handleLaunch}
-                    className="bg-primary hover:bg-primary/90 text-black text-sm font-bold px-5 py-2 rounded-full transition-transform active:scale-95">
+                    className="bg-primary hover:bg-primary/90 text-black text-sm font-bold px-5 py-2 transition-transform active:scale-95">
                     Launch
                 </button>
             </header>
@@ -149,8 +149,8 @@ const ArtistABSetup = () => {
                                 <span className="text-sm font-bold text-white tracking-wide">Version A (Drive Link)</span>
                                 {isValidA && <span className="text-[10px] uppercase font-bold text-green-500 bg-green-900/30 px-2 py-0.5 rounded flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">check</span>Valid</span>}
                             </div>
-                            <div className={`group relative flex items-center gap-3 rounded-2xl border-2 bg-surface-dark p-2 transition-colors ${isValidA ? 'border-green-500/50' : 'border-zinc-800 focus-within:border-primary'}`}>
-                                <div className="size-10 rounded-full bg-zinc-900 flex items-center justify-center shrink-0">
+                            <div className={`group relative flex items-center gap-3 border-2 bg-surface-dark p-2 transition-colors ${isValidA ? 'border-green-500/50' : 'border-zinc-800 focus-within:border-primary'}`}>
+                                <div className="size-10 bg-zinc-900 flex items-center justify-center shrink-0">
                                     <span className="material-symbols-outlined text-zinc-500">link</span>
                                 </div>
                                 <input
@@ -168,8 +168,8 @@ const ArtistABSetup = () => {
                                 <span className="text-sm font-bold text-white tracking-wide">Version B (Optional)</span>
                                 {isValidB && <span className="text-[10px] uppercase font-bold text-green-500 bg-green-900/30 px-2 py-0.5 rounded flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">check</span>Valid</span>}
                             </div>
-                            <div className={`group relative flex items-center gap-3 rounded-2xl border-2 bg-surface-dark p-2 transition-colors ${isValidB ? 'border-green-500/50' : 'border-zinc-800 focus-within:border-primary'}`}>
-                                <div className="size-10 rounded-full bg-zinc-900 flex items-center justify-center shrink-0">
+                            <div className={`group relative flex items-center gap-3 border-2 bg-surface-dark p-2 transition-colors ${isValidB ? 'border-green-500/50' : 'border-zinc-800 focus-within:border-primary'}`}>
+                                <div className="size-10 bg-zinc-900 flex items-center justify-center shrink-0">
                                     <span className="material-symbols-outlined text-zinc-500">link</span>
                                 </div>
                                 <input
