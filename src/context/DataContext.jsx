@@ -40,7 +40,7 @@ export const DataProvider = ({ children }) => {
         return saved ? JSON.parse(saved) : initialTracks;
     });
 
-    const [inviteCode] = useState("XYZ-000"); // Hardcoded for demo
+    const [inviteCode] = useState("PEAKAFELLER");
 
     // Persist to localStorage whenever state changes
     useEffect(() => {

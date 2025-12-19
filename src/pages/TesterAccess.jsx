@@ -25,7 +25,7 @@ const TesterAccess = () => {
             <div className="flex-1 flex flex-col justify-center px-6 -mt-20">
                 <div className="mb-10 text-center">
                     <h2 className="text-white text-[28px] font-bold leading-tight tracking-tight mb-2">Unlock the Beat</h2>
-                    <p className="text-zinc-400 text-base font-normal">Enter the exclusive invite code shared by the artist. (Hint: XYZ-000)</p>
+                    <p className="text-zinc-400 text-base font-normal">Enter the exclusive invite code shared by the artist.</p>
                 </div>
 
                 <div className="w-full mb-8 group">
@@ -35,7 +35,7 @@ const TesterAccess = () => {
                         </div>
                         <input
                             className="block w-full rounded-full border-0 bg-zinc-900/80 py-5 pl-14 pr-5 text-white placeholder:text-zinc-600 focus:ring-2 focus:ring-primary focus:bg-zinc-900 text-lg tracking-[0.2em] font-mono shadow-inner transition-all duration-300 ease-out"
-                            placeholder="XYZ-000"
+                            placeholder="ENTER CODE"
                             type="text"
                             value={inputCode}
                             onChange={(e) => {
