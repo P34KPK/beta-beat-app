@@ -139,7 +139,7 @@ const TesterHome = () => {
                     </div>
                     <h3 className="text-sm font-bold font-mono uppercase text-white mb-4 tracking-wider">Encourage the Project</h3>
 
-                    <button className="w-full bg-[#0070BA] hover:bg-[#005ea6] text-white font-mono font-bold text-xs uppercase py-3 px-4 flex items-center justify-center gap-2 mb-4 border border-transparent hover:border-white transition-all" onClick={() => window.open('https://paypal.me/yourusername', '_blank')}>
+                    <button className="w-full bg-[#FF5500] hover:bg-[#FF5500]/90 text-black font-mono font-bold text-xs uppercase py-3 px-4 flex items-center justify-center gap-2 mb-4 border border-transparent hover:border-white transition-all" onClick={() => window.open('https://paypal.me/yourusername', '_blank')}>
                         <span className="material-symbols-outlined text-lg">payments</span>
                         <span>Donate via PayPal</span>
                     </button>
