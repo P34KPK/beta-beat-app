@@ -14,30 +14,13 @@ const initialArtistProfile = {
         website: ""
     },
     stats: {
-        testers: 142,
-        tracks: 3,
-        score: 8.7
+        testers: 0,
+        tracks: 0,
+        score: 0
     }
 };
 
-const initialTracks = [
-    {
-        id: 1,
-        title: "Midnight Drive (Demo)",
-        version: "v1.2",
-        type: "Single",
-        cover: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1JsYhn52C2ORr15d9_VZnuwQZMhMITRfi7JyppOheuWARbx4tYwEW4SrI4hIuCYSD6GL6qKG5CEgOug6Izy9KMCSW0knJr9wea6Ver6LmpGdpac6RQ5BlmhvXGbKOdN1ECFF2uyulNOPqhMhGCsKVDx19Iii0MZl_S5XQH-kR16ZMkgN1bXfPVLJnMG4mekd8W56vXdSwJ3owHOlcPiha8mmsDqEk4iG7uKKBn5n1NHraLaqUMwBc_ic4p4oQS7-0V7CGnteXbYUp",
-        active: true
-    },
-    {
-        id: 2,
-        title: "Synthwave V2",
-        version: "Mix 3",
-        type: "Single",
-        cover: "https://lh3.googleusercontent.com/aida-public/AB6AXuAJzkbpUYWg1kv3f7vsz6hjSKO4Ib_3iCTAVfLAgB4bdlV-fezP2eYTUC8JjzJY1Ev_SJG13Its2HpYIVgXsWGjXzp6lWXbJA-rT0v1LokNgFBh1K4grtPjfZrB6C0xmAcVplL-DcO6WYBKyU3FYeAiiHCC55NTG7lNbz9EQzE307RsY157adIYGRziDkrTxF0JdG-AGfHhRVNVttta08d1Nrqabrd4QLh4919FsRCPinG17O0cVmZw8Q6U6xptu6JwDT7caG4axYeg",
-        active: true
-    }
-];
+const initialTracks = [];
 
 export const DataProvider = ({ children }) => {
     // Load initial state from localStorage if available, else use defaults
