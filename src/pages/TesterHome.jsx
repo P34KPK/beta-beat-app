@@ -132,6 +132,39 @@ const TesterHome = () => {
                     ))}
                 </div>
             </div>
+            <div className="flex flex-col w-full px-4 pt-8 pb-4">
+                <div className="border border-white/20 p-4 bg-black relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-2 opacity-20">
+                        <span className="material-symbols-outlined text-4xl">savings</span>
+                    </div>
+                    <h3 className="text-sm font-bold font-mono uppercase text-white mb-4 tracking-wider">Encourage the Project</h3>
+
+                    <button className="w-full bg-[#0070BA] hover:bg-[#005ea6] text-white font-mono font-bold text-xs uppercase py-3 px-4 flex items-center justify-center gap-2 mb-4 border border-transparent hover:border-white transition-all" onClick={() => window.open('https://paypal.me/yourusername', '_blank')}>
+                        <span className="material-symbols-outlined text-lg">payments</span>
+                        <span>Donate via PayPal</span>
+                    </button>
+
+                    <div className="grid grid-cols-3 gap-2">
+                        {[
+                            { label: 'BTC', icon: 'currency_bitcoin', color: 'text-orange-500', addr: 'bc1qXY...' },
+                            { label: 'ETH', icon: 'token', color: 'text-blue-400', addr: '0x123...' },
+                            { label: 'XRP', icon: 'change_circle', color: 'text-white', addr: 'rABC...' }
+                        ].map((crypto) => (
+                            <button
+                                key={crypto.label}
+                                onClick={() => {
+                                    navigator.clipboard.writeText(crypto.addr);
+                                    alert(`${crypto.label} address copied!`);
+                                }}
+                                className="flex flex-col items-center justify-center p-2 border border-white/10 hover:bg-white/5 active:bg-white/10 transition-colors gap-1"
+                            >
+                                <span className={`material-symbols-outlined ${crypto.color} text-xl`}>{crypto.icon}</span>
+                                <span className="text-[10px] font-mono font-bold text-zinc-400">{crypto.label}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
             <TesterBottomNav active="listen" />
         </motion.div>
     )
