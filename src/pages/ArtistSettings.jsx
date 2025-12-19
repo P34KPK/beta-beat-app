@@ -12,6 +12,12 @@ const ArtistSettings = () => {
         name: artistProfile.name,
         bio: artistProfile.bio,
         instagram: artistProfile.socials.instagram,
+        tiktok: artistProfile.socials.tiktok,
+        facebook: artistProfile.socials.facebook,
+        soundcloud: artistProfile.socials.soundcloud,
+        snapchat: artistProfile.socials.snapchat,
+        linktree: artistProfile.socials.linktree,
+        discord: artistProfile.socials.discord,
         twitter: artistProfile.socials.twitter,
         website: artistProfile.socials.website
     });
@@ -26,6 +32,12 @@ const ArtistSettings = () => {
             bio: formData.bio,
             socials: {
                 instagram: formData.instagram,
+                tiktok: formData.tiktok,
+                facebook: formData.facebook,
+                soundcloud: formData.soundcloud,
+                snapchat: formData.snapchat,
+                linktree: formData.linktree,
+                discord: formData.discord,
                 twitter: formData.twitter,
                 website: formData.website
             }
@@ -103,42 +115,98 @@ const ArtistSettings = () => {
 
                         <div className="flex items-center gap-3">
                             <div className="size-10 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 flex items-center justify-center shrink-0">
-                                <i className="text-xl">📷</i> {/* Placeholder for Instagram Icon */}
+                                <span className="font-bold">IG</span>
                             </div>
                             <input
                                 type="text"
                                 name="instagram"
                                 value={formData.instagram}
                                 onChange={handleChange}
-                                placeholder="Instagram username"
+                                placeholder="Instagram"
                                 className="flex-1 h-12 rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 px-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                             />
                         </div>
 
                         <div className="flex items-center gap-3">
                             <div className="size-10 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 flex items-center justify-center shrink-0">
-                                <i className="text-xl">🐦</i> {/* Placeholder for Twitter Icon */}
+                                <span className="font-bold">TT</span>
                             </div>
                             <input
                                 type="text"
-                                name="twitter"
-                                value={formData.twitter}
+                                name="tiktok"
+                                value={formData.tiktok}
                                 onChange={handleChange}
-                                placeholder="Twitter handle"
+                                placeholder="TikTok"
                                 className="flex-1 h-12 rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 px-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                             />
                         </div>
 
                         <div className="flex items-center gap-3">
                             <div className="size-10 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 flex items-center justify-center shrink-0">
-                                <span className="material-symbols-outlined text-xl">language</span>
+                                <span className="font-bold">FB</span>
                             </div>
                             <input
                                 type="text"
-                                name="website"
-                                value={formData.website}
+                                name="facebook"
+                                value={formData.facebook}
                                 onChange={handleChange}
-                                placeholder="Website URL"
+                                placeholder="Facebook"
+                                className="flex-1 h-12 rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 px-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                            />
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <div className="size-10 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 flex items-center justify-center shrink-0">
+                                <span className="font-bold">SC</span>
+                            </div>
+                            <input
+                                type="text"
+                                name="soundcloud"
+                                value={formData.soundcloud}
+                                onChange={handleChange}
+                                placeholder="SoundCloud"
+                                className="flex-1 h-12 rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 px-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                            />
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <div className="size-10 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 flex items-center justify-center shrink-0">
+                                <span className="font-bold">SN</span>
+                            </div>
+                            <input
+                                type="text"
+                                name="snapchat"
+                                value={formData.snapchat}
+                                onChange={handleChange}
+                                placeholder="Snapchat"
+                                className="flex-1 h-12 rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 px-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                            />
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <div className="size-10 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 flex items-center justify-center shrink-0">
+                                <span className="font-bold">LT</span>
+                            </div>
+                            <input
+                                type="text"
+                                name="linktree"
+                                value={formData.linktree}
+                                onChange={handleChange}
+                                placeholder="LinkTree"
+                                className="flex-1 h-12 rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 px-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                            />
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <div className="size-10 rounded-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 flex items-center justify-center shrink-0">
+                                <span className="font-bold">DC</span>
+                            </div>
+                            <input
+                                type="text"
+                                name="discord"
+                                value={formData.discord}
+                                onChange={handleChange}
+                                placeholder="Discord"
                                 className="flex-1 h-12 rounded-2xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 px-4 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                             />
                         </div>

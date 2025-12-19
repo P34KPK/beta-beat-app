@@ -9,7 +9,13 @@ const initialArtistProfile = {
     bio: "Testing new sounds for the next era.",
     photo: "/peakafeller_profile.jpg",
     socials: {
-        instagram: "",
+        instagram: "https://www.instagram.com/peakafeller?igsh=MWw4YjZjeDB6OTlidw%3D%3D&utm_source=qr",
+        tiktok: "https://www.tiktok.com/@peakafeller_lerecycleur?_r=1&_t=ZS-92LGYgBsift",
+        facebook: "https://www.facebook.com/share/17MuE6JEfo/?mibextid=wwXIfr",
+        soundcloud: "https://on.soundcloud.com/bkxyp24SNcZKtF0Ay8",
+        snapchat: "https://snapchat.com/t/c8hBxBU7",
+        linktree: "https://linktr.ee/Peakafeller",
+        discord: "https://discord.gg/HSKXZkXeH",
         twitter: "",
         website: ""
     },
