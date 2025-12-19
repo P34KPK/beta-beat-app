@@ -55,8 +55,8 @@ const ArtistDashboard = () => {
 
                             {/* Artist Section - Inline - Monochrome */}
                             <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-full pr-6 pl-2 py-2 mb-8 backdrop-blur-md">
-                                <div className="size-12 rounded-full border border-white shadow-lg relative shrink-0 grayscale">
-                                    <img src={artistProfile.photo} alt="Artist" className="w-full h-full object-cover rounded-full" />
+                                <div className="size-12 border border-white shadow-lg relative shrink-0 grayscale" style={{ borderRadius: '50%' }}>
+                                    <img src={artistProfile.photo} alt="Artist" className="w-full h-full object-cover" style={{ borderRadius: '50%' }} />
                                 </div>
                                 <div className="text-left">
                                     <h2 className="text-lg font-bold text-white leading-none uppercase">{artistProfile.name}</h2>
