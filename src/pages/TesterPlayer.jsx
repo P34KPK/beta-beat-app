@@ -7,8 +7,9 @@ import { useData } from '../context/DataContext';
 const TesterPlayer = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { tracks } = useData();
+    const { tracks, logSession } = useData();
     const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+    const [hasLogged, setHasLogged] = useState(false); // Prevent double logging
 
     const currentAudioUrl = track?.isAlbum
         ? track.trackList[currentTrackIndex]?.audioUrl
@@ -31,12 +32,23 @@ const TesterPlayer = () => {
         };
 
         const handleEnded = () => {
+            // Log successful listen
+            if (!hasLogged) {
+                logSession({
+                    trackId: track.id,
+                    trackTitle: currentTitle,
+                    durationListened: audio.duration,
+                    totalDuration: audio.duration,
+                    completed: true,
+                    timestamp: new Date().toISOString(),
+                    testerId: sessionStorage.getItem('testerId') || 'Anonymous'
+                });
+                setHasLogged(true);
+            }
+
             if (track.isAlbum && currentTrackIndex < track.trackList.length - 1) {
                 // Auto-advance to next track
                 setCurrentTrackIndex(prev => prev + 1);
-                // Wait small delay for state update to propagate to ref src (React quirk)
-                // Actually easier: let the effect re-run when index changes. 
-                // We just need to ensure it autoplay when index changes if it was playing.
             } else {
                 setIsPlaying(false);
                 setShowUI(true);
@@ -45,8 +57,16 @@ const TesterPlayer = () => {
             }
         };
 
+        const handlePlay = () => {
+            if (!sessionStorage.getItem('testerId')) {
+                sessionStorage.setItem('testerId', `Tester-${Math.floor(Math.random() * 1000)}`);
+            }
+            setHasLogged(false);
+        };
+
         audio.addEventListener('timeupdate', handleTimeUpdate);
         audio.addEventListener('ended', handleEnded);
+        audio.addEventListener('play', handlePlay);
 
         // Auto-play on mount or track change if isPlaying is true
         if (isPlaying) {
@@ -63,8 +83,9 @@ const TesterPlayer = () => {
         return () => {
             audio.removeEventListener('timeupdate', handleTimeUpdate);
             audio.removeEventListener('ended', handleEnded);
+            audio.removeEventListener('play', handlePlay);
         };
-    }, [isPlaying, currentTrackIndex, track]);
+    }, [isPlaying, currentTrackIndex, track, currentTitle, hasLogged]);
 
     // Reset progress when track changes
     useEffect(() => {

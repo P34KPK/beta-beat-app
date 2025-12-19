@@ -6,6 +6,7 @@ import ArtistTracks from './pages/ArtistTracks';
 import ArtistFeedback from './pages/ArtistFeedback';
 import ArtistABSetup from './pages/ArtistABSetup';
 import ArtistSettings from './pages/ArtistSettings';
+import ArtistStats from './pages/ArtistStats';
 import TesterAccess from './pages/TesterAccess';
 import TesterHome from './pages/TesterHome';
 import TesterPlayer from './pages/TesterPlayer';
@@ -29,6 +30,7 @@ function App() {
           <Route path="/artist-feedback" element={<ArtistFeedback />} />
           <Route path="/artist-ab-setup" element={<ArtistABSetup />} />
           <Route path="/artist-settings" element={<ArtistSettings />} />
+          <Route path="/artist-stats" element={<ArtistStats />} /> {/* Added route */}
 
           {/* Tester Flows */}
           <Route path="/tester-access" element={<TesterAccess />} />

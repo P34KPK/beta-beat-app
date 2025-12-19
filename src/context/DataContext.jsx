@@ -45,6 +45,11 @@ export const DataProvider = ({ children }) => {
         return saved ? JSON.parse(saved) : [];
     });
 
+    const [testerSessions, setTesterSessions] = useState(() => {
+        const saved = localStorage.getItem('testerSessions');
+        return saved ? JSON.parse(saved) : [];
+    });
+
     const [inviteCode] = useState("PEAKAFELLER");
 
     // Persist to localStorage whenever state changes
@@ -60,6 +65,10 @@ export const DataProvider = ({ children }) => {
         localStorage.setItem('feedback', JSON.stringify(feedback));
     }, [feedback]);
 
+    useEffect(() => {
+        localStorage.setItem('testerSessions', JSON.stringify(testerSessions));
+    }, [testerSessions]);
+
     const updateProfile = (newProfileData) => {
         setArtistProfile(prev => ({
             ...prev,
@@ -73,7 +82,7 @@ export const DataProvider = ({ children }) => {
 
     const addFeedback = (newFeedback) => {
         setFeedback(prev => [...prev, { ...newFeedback, id: Date.now(), date: new Date().toISOString() }]);
-        // Update Stats Score (Simple Logic: Add average rating to score)
+        // Update Stats Score
         setArtistProfile(prev => ({
             ...prev,
             stats: {
@@ -84,6 +93,11 @@ export const DataProvider = ({ children }) => {
         }));
     };
 
+    const logSession = (sessionData) => {
+        // sessionData: { trackId, trackTitle, durationListened, totalDuration, completed, timestamp, testerId }
+        setTesterSessions(prev => [...prev, { ...sessionData, id: Date.now() }]);
+    };
+
     return (
         <DataContext.Provider value={{
             artistProfile,
@@ -92,7 +106,9 @@ export const DataProvider = ({ children }) => {
             addTrack,
             inviteCode,
             feedback,
-            addFeedback
+            addFeedback,
+            testerSessions,
+            logSession
         }}>
             {children}
         </DataContext.Provider>
