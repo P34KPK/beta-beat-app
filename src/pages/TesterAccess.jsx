@@ -19,7 +19,7 @@ const TesterAccess = () => {
     return (
         <div className="relative flex h-full w-full flex-col overflow-hidden max-w-md mx-auto min-h-screen">
             <div className="flex-none pt-12 pb-6 px-6 text-center z-10 flex justify-center">
-                <img src="/beta-beat-logo.png" alt="BETA BEAT" className="w-24 h-auto opacity-80 grayscale contrast-125" />
+                <img src="/beta-beat-logo.png" alt="BETA BEAT" className="w-48 h-auto opacity-80 grayscale contrast-125" />
             </div>
 
             <div className="flex-1 flex flex-col justify-center px-6 -mt-20">
