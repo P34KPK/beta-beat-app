@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import ArtistBottomNav from '../components/ArtistBottomNav';
 import { useData } from '../context/DataContext';
 
 const ArtistDashboard = () => {
     const navigate = useNavigate();
     const { artistProfile, tracks, inviteCode } = useData();
+    const [showInviteCard, setShowInviteCard] = useState(false);
 
     const handleInvite = async () => {
         const url = `${window.location.origin}/tester-access`;
@@ -32,6 +34,58 @@ const ArtistDashboard = () => {
 
     return (
         <div className="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto shadow-2xl pb-24">
+            {/* VIP Card Modal */}
+            {showInviteCard && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-6" onClick={() => setShowInviteCard(false)}>
+                    <div className="w-full max-w-sm bg-surface-dark border border-white/10 rounded-[2rem] overflow-hidden relative shadow-[0_0_50px_rgba(242,127,13,0.15)] animate-in fade-in zoom-in duration-300" onClick={e => e.stopPropagation()}>
+                        {/* Status Bar Decor */}
+                        <div className="h-2 w-full bg-gradient-to-r from-primary to-orange-600"></div>
+
+                        <div className="p-8 flex flex-col items-center text-center relative">
+                            {/* Background Pattern */}
+                            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent pointer-events-none"></div>
+
+                            {/* Brand */}
+                            <div className="mb-6 relative">
+                                <div className="absolute -inset-4 bg-primary/20 blur-xl rounded-full"></div>
+                                <h1 className="relative text-3xl font-black italic tracking-tighter text-white transform -skew-x-12">
+                                    BETA <span className="text-primary">BEAT</span>
+                                </h1>
+                            </div>
+
+                            <p className="text-zinc-400 text-xs font-bold uppercase tracking-[0.2em] mb-8">Official Invitation</p>
+
+                            {/* Artist Section */}
+                            <div className="size-24 rounded-full border-4 border-surface-dark shadow-xl mb-4 relative z-10">
+                                <img src={artistProfile.photo} alt="Artist" className="w-full h-full object-cover rounded-full" />
+                                <div className="absolute bottom-0 right-0 bg-primary text-black text-[10px] font-bold px-2 py-0.5 rounded-full border border-surface-dark">HOST</div>
+                            </div>
+
+                            <h2 className="text-2xl font-bold text-white leading-tight mb-2 uppercase">{artistProfile.name}</h2>
+                            <p className="text-zinc-300 text-sm px-4 leading-relaxed mb-8">
+                                Invites you to join the exclusive testing phase for the new project.
+                            </p>
+
+                            {/* Code Badge */}
+                            <div className="w-full bg-black/40 rounded-xl p-4 border border-white/5 mb-6">
+                                <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1">Access Code</p>
+                                <p className="text-2xl font-mono font-bold text-primary tracking-widest">{inviteCode}</p>
+                            </div>
+
+                            <p className="text-[10px] text-zinc-600 font-mono">beta-beat-app.vercel.app</p>
+
+                            <button onClick={() => setShowInviteCard(false)} className="absolute top-4 right-4 text-zinc-500 hover:text-white">
+                                <span className="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+                        {/* Footer */}
+                        <div className="bg-white/5 p-3 text-center">
+                            <p className="text-[10px] text-zinc-500">Screenshot to share • VIP Access Only</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <header className="flex items-center px-6 pt-12 pb-4 justify-between bg-transparent sticky top-0 z-10 backdrop-blur-md">
                 <div className="flex items-center gap-3">
                     <div className="relative">
@@ -76,7 +130,10 @@ const ArtistDashboard = () => {
                     <div className="flex gap-3">
                         <button onClick={handleInvite} className="flex flex-1 cursor-pointer items-center justify-center rounded-full h-14 px-6 bg-primary text-black text-base font-bold tracking-wide hover:bg-orange-600 transition-colors shadow-[0_0_20px_rgba(242,127,13,0.3)]">
                             <span className="material-symbols-outlined mr-2">person_add</span>
-                            <span>Invite Testers</span>
+                            <span>Invite</span>
+                        </button>
+                        <button onClick={() => setShowInviteCard(true)} className="flex cursor-pointer items-center justify-center rounded-full h-14 w-14 bg-surface-dark border border-border-dark text-white hover:bg-white/5 transition-colors">
+                            <span className="material-symbols-outlined text-primary">qr_code_2</span>
                         </button>
                     </div>
                     <div className="flex gap-3">
