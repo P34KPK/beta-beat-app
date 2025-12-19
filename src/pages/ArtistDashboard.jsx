@@ -4,7 +4,7 @@ import { useData } from '../context/DataContext';
 
 const ArtistDashboard = () => {
     const navigate = useNavigate();
-    const { artistProfile } = useData();
+    const { artistProfile, tracks } = useData();
 
     return (
         <div className="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto shadow-2xl pb-24">
@@ -71,27 +71,39 @@ const ArtistDashboard = () => {
             <section className="px-6 py-6">
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-white text-lg font-bold">Trending Track</h3>
-                    <a className="text-primary text-sm font-semibold hover:text-white transition-colors" href="#">View Analytics</a>
+                    {tracks.length > 0 && <a className="text-primary text-sm font-semibold hover:text-white transition-colors" href="#" onClick={(e) => { e.preventDefault(); navigate('/artist-tracks'); }}>View All</a>}
                 </div>
-                <div className="bg-surface-dark border border-border-dark rounded-[2rem] p-4 flex items-center gap-4 relative overflow-hidden group">
-                    <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none">
-                        <span className="material-symbols-outlined text-[120px] text-white">graphic_eq</span>
-                    </div>
-                    <div className="relative shrink-0">
-                        <div className="size-20 rounded-2xl bg-cover bg-center" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBwbBzk3wRUp7hkB9bkIT2dasHHF_yl6Js6DTqaYnDySsG4SbFTTez34BS8ckbVDEDYmZ67L8p57_pbfCNMYecgupadqsmK2OnL6ks1jlUFM2DCaEuwcWe_siDwt8qaNN5SB2vfq5CT0D0kRVs378MhcKJlzzY1ocO6A0ZBYuICrDkT6ydt5cL-mxobhVG-HQpz5bEr_aeztrSYwXO9Z80N8zslWUojIGK1rI68QbcLhTIVcDwpWzYRO5sly_pmO91p_WkGGaHlLKPc")' }}></div>
-                        <div className="absolute -bottom-2 -right-2 bg-primary text-black text-[10px] font-bold px-2 py-1 rounded-full">BETA v2</div>
-                    </div>
-                    <div className="flex-1 min-w-0 z-10">
-                        <h4 className="text-white font-bold text-lg truncate">Midnight City (Demo)</h4>
-                        <div className="flex items-center gap-2 mt-1">
-                            <span className="material-symbols-outlined text-primary text-sm">trending_up</span>
-                            <p className="text-slate-400 text-sm truncate">Trending among Top Testers</p>
+                {artistProfile.stats.tracks > 0 && tracks[0] ? (
+                    <div className="bg-surface-dark border border-border-dark rounded-[2rem] p-4 flex items-center gap-4 relative overflow-hidden group">
+                        <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none">
+                            <span className="material-symbols-outlined text-[120px] text-white">graphic_eq</span>
                         </div>
+                        <div className="relative shrink-0">
+                            <div className="size-20 rounded-2xl bg-cover bg-center" style={{ backgroundImage: `url("${tracks[0].cover}")` }}></div>
+                            <div className="absolute -bottom-2 -right-2 bg-primary text-black text-[10px] font-bold px-2 py-1 rounded-full">{tracks[0].version}</div>
+                        </div>
+                        <div className="flex-1 min-w-0 z-10">
+                            <h4 className="text-white font-bold text-lg truncate">{tracks[0].title}</h4>
+                            <div className="flex items-center gap-2 mt-1">
+                                <span className="material-symbols-outlined text-green-500 text-sm">new_releases</span>
+                                <p className="text-slate-400 text-sm truncate">Latest Release</p>
+                            </div>
+                        </div>
+                        <button className="size-10 rounded-full bg-white text-black flex items-center justify-center shrink-0 hover:scale-105 transition-transform">
+                            <span className="material-symbols-outlined filled" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
+                        </button>
                     </div>
-                    <button className="size-10 rounded-full bg-white text-black flex items-center justify-center shrink-0 hover:scale-105 transition-transform">
-                        <span className="material-symbols-outlined filled" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
-                    </button>
-                </div>
+                ) : (
+                    <div className="bg-surface-dark/50 border border-white/5 rounded-[2rem] p-6 flex flex-col items-center justify-center text-center gap-2">
+                        <div className="bg-white/5 p-3 rounded-full mb-1">
+                            <span className="material-symbols-outlined text-zinc-500">music_off</span>
+                        </div>
+                        <p className="text-zinc-400 text-sm font-medium">No tracks trending yet.</p>
+                        <button onClick={() => navigate('/artist-ab-setup')} className="text-primary text-xs font-bold uppercase tracking-wider hover:text-white transition-colors mt-2">
+                            Available to Upload
+                        </button>
+                    </div>
+                )}
             </section>
 
             <ArtistBottomNav active="home" />
