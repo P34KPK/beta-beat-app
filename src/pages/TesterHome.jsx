@@ -61,7 +61,7 @@ const TesterHome = () => {
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                             <h2 className="text-lg font-bold truncate dark:text-white font-mono uppercase">{artistProfile.name}</h2>
-                            <span className="material-symbols-outlined text-blue-400 text-sm verified-badge">verified</span>
+                            <span className="material-symbols-outlined text-[#FF5500] text-sm verified-badge">verified</span>
                         </div>
                         <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-3 leading-snug font-mono text-xs">{artistProfile.bio}</p>
 
