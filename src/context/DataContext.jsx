@@ -5,9 +5,9 @@ const DataContext = createContext();
 export const useData = () => useContext(DataContext);
 
 const initialArtistProfile = {
-    name: "The Weeknd",
-    bio: "Global superstar. Testing new sounds for the next era.",
-    photo: "https://lh3.googleusercontent.com/aida-public/AB6AXuAbjdHnzRjSCUvUK5qdqxGw0IzOaJgerou5YGSEAt8rt9dksWdUHnKR_MwsNaBhL5zTLooPJQ3Y17PWQDvh_S8j4Egx0DJEnuF93Xs8zTE90K5m5q41Mi4mTpji2waMba0AYmoDJAGWRRLi_3gQh0cJ1CwotDnKy6dr8xdvfzv34jMTKlm5s14Konro7moagYNdNgbhC7btc6BVc_uvCcqQ8d77nQVAJgrfrRz79A9O2NvytH-EzlDx5GRrmVmSs4xn4CIyvrFedFme",
+    name: "PEAKAFELLER",
+    bio: "Testing new sounds for the next era.",
+    photo: "/peakafeller_profile.jpg",
     socials: {
         instagram: "",
         twitter: "",
