@@ -17,6 +17,7 @@ export default {
         fontFamily: {
             "display": ["Spline Sans", "Noto Sans", "sans-serif"],
             "body": ["Noto Sans", "sans-serif"],
+            "mono": ["JetBrains Mono", "monospace"],
         },
         borderRadius: { "DEFAULT": "0px", "sm": "0px", "md": "0px", "lg": "0px", "xl": "0px", "2xl": "0px", "3xl": "0px", "full": "9999px" },
     },

@@ -51,7 +51,7 @@ const ArtistDashboard = () => {
                                 <img src="/beta-beat-logo.png" alt="BETA BEAT" className="relative w-48 object-contain opacity-90 grayscale contrast-125" />
                             </div>
 
-                            <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.3em] mb-8">Official Invitation</p>
+                            <p className="text-zinc-500 font-mono text-[10px] font-bold uppercase tracking-[0.3em] mb-8">Official Invitation</p>
 
                             {/* Artist Section - Inline - Monochrome */}
                             <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-full pr-6 pl-2 py-2 mb-8 backdrop-blur-md">
@@ -110,18 +110,18 @@ const ArtistDashboard = () => {
                 <div className="flex flex-wrap gap-4">
                     <div className="flex flex-1 min-w-[100px] flex-col gap-1 bg-surface-dark border border-border-dark p-5 items-center text-center">
                         <span className="material-symbols-outlined text-primary mb-1" style={{ fontSize: '28px' }}>group</span>
-                        <p className="text-white text-3xl font-bold leading-tight">{artistProfile.stats.testers}</p>
-                        <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Testers</p>
+                        <p className="text-white text-3xl font-mono font-bold leading-tight">{artistProfile.stats.testers}</p>
+                        <p className="text-slate-400 text-xs font-mono font-medium uppercase tracking-wider">Testers</p>
                     </div>
                     <div className="flex flex-1 min-w-[100px] flex-col gap-1 bg-surface-dark border border-border-dark p-5 items-center text-center">
                         <span className="material-symbols-outlined text-primary mb-1" style={{ fontSize: '28px' }}>graphic_eq</span>
-                        <p className="text-white text-3xl font-bold leading-tight">{artistProfile.stats.tracks}</p>
-                        <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Tracks</p>
+                        <p className="text-white text-3xl font-mono font-bold leading-tight">{artistProfile.stats.tracks}</p>
+                        <p className="text-slate-400 text-xs font-mono font-medium uppercase tracking-wider">Tracks</p>
                     </div>
                     <div className="flex flex-1 min-w-[100px] flex-col gap-1 bg-surface-dark border border-border-dark p-5 items-center text-center">
                         <span className="material-symbols-outlined text-primary mb-1" style={{ fontSize: '28px' }}>star</span>
-                        <p className="text-primary text-3xl font-bold leading-tight">{artistProfile.stats.score}</p>
-                        <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Score</p>
+                        <p className="text-primary text-3xl font-mono font-bold leading-tight">{artistProfile.stats.score}</p>
+                        <p className="text-slate-400 text-xs font-mono font-medium uppercase tracking-wider">Score</p>
                     </div>
                 </div>
             </section>
@@ -134,7 +134,7 @@ const ArtistDashboard = () => {
                     <div className="flex gap-3">
                         <button onClick={handleInvite} className="flex flex-1 cursor-pointer items-center justify-center h-14 px-6 bg-primary text-black text-base font-bold tracking-wide hover:bg-orange-600 transition-colors shadow-[0_0_20px_rgba(242,127,13,0.3)]">
                             <span className="material-symbols-outlined mr-2">person_add</span>
-                            <span>Invite</span>
+                            <span className="font-mono uppercase">Invite</span>
                         </button>
                         <button onClick={() => setShowInviteCard(true)} className="flex cursor-pointer items-center justify-center h-14 w-14 bg-surface-dark border border-border-dark text-white hover:bg-white/5 transition-colors">
                             <span className="material-symbols-outlined text-primary">qr_code_2</span>
@@ -143,7 +143,7 @@ const ArtistDashboard = () => {
                     <div className="flex gap-3">
                         <button onClick={() => navigate('/artist-feedback')} className="flex flex-1 cursor-pointer items-center justify-center h-14 px-6 bg-surface-dark border border-border-dark text-white text-base font-bold tracking-wide hover:bg-white/5 transition-colors">
                             <span className="material-symbols-outlined mr-2">rate_review</span>
-                            <span>Feedback</span>
+                            <span className="font-mono uppercase">Feedback</span>
                         </button>
                     </div>
                 </div>
@@ -161,7 +161,7 @@ const ArtistDashboard = () => {
                         </div>
                         <div className="relative shrink-0">
                             <div className="size-20 bg-cover bg-center" style={{ backgroundImage: `url("${tracks[0].cover}")` }}></div>
-                            <div className="absolute -bottom-2 -right-2 bg-primary text-black text-[10px] font-bold px-2 py-1">{tracks[0].version}</div>
+                            <div className="absolute -bottom-2 -right-2 bg-primary text-black text-[10px] font-mono font-bold px-2 py-1 border border-black">{tracks[0].version}</div>
                         </div>
                         <div className="flex-1 min-w-0 z-10">
                             <h4 className="text-white font-bold text-lg truncate">{tracks[0].title}</h4>
