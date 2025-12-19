@@ -45,24 +45,24 @@ const ArtistDashboard = () => {
                             {/* Background Pattern */}
                             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent pointer-events-none"></div>
 
-                            {/* Brand */}
-                            <div className="mb-6 relative">
-                                <div className="absolute -inset-4 bg-primary/20 blur-xl rounded-full"></div>
-                                <img src="/beta-beat-logo.png" alt="BETA BEAT" className="relative h-12 object-contain" />
+                            {/* Brand - Dominant */}
+                            <div className="mb-8 relative w-full flex justify-center mt-4">
+                                <div className="absolute inset-0 bg-primary/10 blur-[60px] rounded-full transform scale-150"></div>
+                                <img src="/beta-beat-logo.png" alt="BETA BEAT" className="relative w-48 object-contain drop-shadow-[0_0_15px_rgba(242,127,13,0.5)]" />
                             </div>
 
-                            <p className="text-zinc-400 text-xs font-bold uppercase tracking-[0.2em] mb-8">Official Invitation</p>
+                            <p className="text-zinc-400 text-[10px] font-bold uppercase tracking-[0.3em] mb-8">Official Invitation</p>
 
-                            {/* Artist Section */}
-                            <div className="size-24 rounded-full border-4 border-surface-dark shadow-xl mb-4 relative z-10">
-                                <img src={artistProfile.photo} alt="Artist" className="w-full h-full object-cover rounded-full" />
-                                <div className="absolute bottom-0 right-0 bg-primary text-black text-[10px] font-bold px-2 py-0.5 rounded-full border border-surface-dark">HOST</div>
+                            {/* Artist Section - Inline */}
+                            <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-full pr-6 pl-2 py-2 mb-8 backdrop-blur-md">
+                                <div className="size-12 rounded-full border-2 border-primary shadow-lg relative shrink-0">
+                                    <img src={artistProfile.photo} alt="Artist" className="w-full h-full object-cover rounded-full" />
+                                </div>
+                                <div className="text-left">
+                                    <h2 className="text-lg font-bold text-white leading-none uppercase">{artistProfile.name}</h2>
+                                    <p className="text-zinc-400 text-[10px] font-medium mt-0.5">Invites you to beta test</p>
+                                </div>
                             </div>
-
-                            <h2 className="text-2xl font-bold text-white leading-tight mb-2 uppercase">{artistProfile.name}</h2>
-                            <p className="text-zinc-300 text-sm px-4 leading-relaxed mb-6">
-                                Invites you to join the exclusive testing phase for the new project.
-                            </p>
 
                             {/* Code Badge */}
                             <div className="w-full bg-black/40 rounded-xl p-4 border border-white/5 mb-6">
