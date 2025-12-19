@@ -141,6 +141,10 @@ const ArtistDashboard = () => {
                         </button>
                     </div>
                     <div className="flex gap-3">
+                        <button onClick={() => navigate('/tester-home')} className="flex flex-1 cursor-pointer items-center justify-center h-14 px-6 bg-black border border-white/20 text-white text-base font-bold tracking-wide hover:bg-white hover:text-black transition-colors">
+                            <span className="material-symbols-outlined mr-2">visibility</span>
+                            <span className="font-mono uppercase">Preview</span>
+                        </button>
                         <button onClick={() => navigate('/artist-feedback')} className="flex flex-1 cursor-pointer items-center justify-center h-14 px-6 bg-black border border-white/20 text-white text-base font-bold tracking-wide hover:bg-white hover:text-black transition-colors">
                             <span className="material-symbols-outlined mr-2">rate_review</span>
                             <span className="font-mono uppercase">Feedback</span>
