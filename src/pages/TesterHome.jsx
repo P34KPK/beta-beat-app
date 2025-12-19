@@ -5,7 +5,7 @@ import { useData } from '../context/DataContext';
 
 const TesterHome = () => {
     const navigate = useNavigate();
-    const { tracks } = useData();
+    const { tracks, artistProfile } = useData();
 
     return (
         <motion.div
@@ -23,6 +23,19 @@ const TesterHome = () => {
                     <button className="flex items-center justify-center rounded-full size-10 bg-transparent text-slate-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
                         <span className="material-symbols-outlined">filter_list</span>
                     </button>
+                </div>
+            </div>
+
+            <div className="flex flex-col w-full px-4 pt-4">
+                <div className="flex items-start gap-4 p-4 bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl">
+                    <div className="size-16 rounded-full bg-cover bg-center shrink-0 border-2 border-primary" style={{ backgroundImage: `url("${artistProfile.photo}")` }}></div>
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                            <h2 className="text-lg font-bold truncate dark:text-white">{artistProfile.name}</h2>
+                            <span className="material-symbols-outlined text-blue-400 text-sm verified-badge">verified</span>
+                        </div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-3 leading-snug">{artistProfile.bio}</p>
+                    </div>
                 </div>
             </div>
 
