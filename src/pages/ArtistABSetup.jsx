@@ -128,7 +128,7 @@ const ArtistABSetup = () => {
                 </div>
                 <button
                     onClick={handleLaunch}
-                    className="bg-primary hover:bg-primary/90 text-white text-sm font-bold px-5 py-2 rounded-full transition-transform active:scale-95">
+                    className="bg-primary hover:bg-primary/90 text-black text-sm font-bold px-5 py-2 rounded-full transition-transform active:scale-95">
                     Launch
                 </button>
             </header>
