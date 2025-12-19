@@ -13,7 +13,7 @@ const ArtistBottomNav = ({ active }) => {
                     <span className="material-symbols-outlined">library_music</span>
                     <span className="text-[10px] font-medium">Tracks</span>
                 </button>
-                <button className="flex flex-col items-center justify-center gap-1 p-2 w-16 text-slate-500 hover:text-white transition-colors">
+                <button onClick={() => navigate('/artist-stats')} className={`flex flex-col items-center justify-center gap-1 p-2 w-16 ${active === 'analytics' ? 'text-primary' : 'text-slate-500 hover:text-white'} transition-colors`}>
                     <span className="material-symbols-outlined">group</span>
                     <span className="text-[10px] font-medium">Testers</span>
                 </button>
