@@ -36,8 +36,8 @@ const ArtistDashboard = () => {
         <div className="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto shadow-2xl pb-24">
             {/* VIP Card Modal */}
             {showInviteCard && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-6" onClick={() => setShowInviteCard(false)}>
-                    <div className="w-full max-w-sm bg-surface-dark border border-white/10 overflow-hidden relative shadow-[0_0_50px_rgba(255,255,255,0.1)] animate-in fade-in zoom-in duration-300" onClick={e => e.stopPropagation()}>
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-6" onClick={() => setShowInviteCard(false)}>
+                    <div className="w-full max-w-sm bg-black border-2 border-white relative" onClick={e => e.stopPropagation()}>
                         {/* Status Bar Decor - Monochrome */}
                         <div className="h-1 w-full bg-white"></div>
 
@@ -46,8 +46,8 @@ const ArtistDashboard = () => {
                             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent pointer-events-none"></div>
 
                             {/* Brand - Dominant */}
-                            <div className="mb-8 relative w-full flex justify-center mt-4">
-                                <div className="absolute inset-0 bg-white/5 blur-[60px] rounded-full transform scale-150"></div>
+                            <div className="mb-8 relative w-full flex justify-center mt-4 has-[+div]:grayscale">
+                                {/* Removed glow */}
                                 <img src="/beta-beat-logo.png" alt="BETA BEAT" className="relative w-48 object-contain opacity-90 grayscale contrast-125" />
                             </div>
 
@@ -132,16 +132,16 @@ const ArtistDashboard = () => {
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex gap-3">
-                        <button onClick={handleInvite} className="flex flex-1 cursor-pointer items-center justify-center h-14 px-6 bg-primary text-black text-base font-bold tracking-wide hover:bg-orange-600 transition-colors shadow-[0_0_20px_rgba(242,127,13,0.3)]">
+                        <button onClick={handleInvite} className="flex flex-1 cursor-pointer items-center justify-center h-14 px-6 bg-white text-black text-base font-bold tracking-wide hover:bg-zinc-200 transition-colors border-2 border-transparent hover:border-white">
                             <span className="material-symbols-outlined mr-2">person_add</span>
                             <span className="font-mono uppercase">Invite</span>
                         </button>
-                        <button onClick={() => setShowInviteCard(true)} className="flex cursor-pointer items-center justify-center h-14 w-14 bg-surface-dark border border-border-dark text-white hover:bg-white/5 transition-colors">
-                            <span className="material-symbols-outlined text-primary">qr_code_2</span>
+                        <button onClick={() => setShowInviteCard(true)} className="flex cursor-pointer items-center justify-center h-14 w-14 bg-black border border-white/20 text-white hover:bg-white hover:text-black transition-colors">
+                            <span className="material-symbols-outlined">qr_code_2</span>
                         </button>
                     </div>
                     <div className="flex gap-3">
-                        <button onClick={() => navigate('/artist-feedback')} className="flex flex-1 cursor-pointer items-center justify-center h-14 px-6 bg-surface-dark border border-border-dark text-white text-base font-bold tracking-wide hover:bg-white/5 transition-colors">
+                        <button onClick={() => navigate('/artist-feedback')} className="flex flex-1 cursor-pointer items-center justify-center h-14 px-6 bg-black border border-white/20 text-white text-base font-bold tracking-wide hover:bg-white hover:text-black transition-colors">
                             <span className="material-symbols-outlined mr-2">rate_review</span>
                             <span className="font-mono uppercase">Feedback</span>
                         </button>
@@ -175,8 +175,8 @@ const ArtistDashboard = () => {
                         </button>
                     </div>
                 ) : (
-                    <div className="bg-surface-dark/50 border border-white/5 rounded-[2rem] p-6 flex flex-col items-center justify-center text-center gap-2">
-                        <div className="bg-white/5 p-3 rounded-full mb-1">
+                    <div className="bg-transparent border border-dashed border-zinc-700 p-6 flex flex-col items-center justify-center text-center gap-2">
+                        <div className="bg-transparent border border-zinc-700 p-3 mb-1">
                             <span className="material-symbols-outlined text-zinc-500">music_off</span>
                         </div>
                         <p className="text-zinc-400 text-sm font-medium">No tracks trending yet.</p>

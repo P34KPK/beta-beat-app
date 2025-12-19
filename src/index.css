@@ -6,6 +6,8 @@ body {
     /* Prevent bouncing on mobile */
     overscroll-behavior-y: none;
     min-height: max(884px, 100dvh);
+    background-image: radial-gradient(#262626 1px, transparent 1px);
+    background-size: 24px 24px;
     @apply bg-background-dark text-white;
 }
 
