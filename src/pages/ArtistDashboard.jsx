@@ -141,10 +141,6 @@ const ArtistDashboard = () => {
                         </button>
                     </div>
                     <div className="flex gap-3">
-                        <button onClick={() => navigate('/artist-ab-setup')} className="flex flex-1 cursor-pointer items-center justify-center rounded-full h-14 px-6 bg-surface-dark border border-border-dark text-white text-base font-bold tracking-wide hover:bg-white/5 transition-colors">
-                            <span className="material-symbols-outlined mr-2">upload_file</span>
-                            <span>New Test</span>
-                        </button>
                         <button onClick={() => navigate('/artist-feedback')} className="flex flex-1 cursor-pointer items-center justify-center rounded-full h-14 px-6 bg-surface-dark border border-border-dark text-white text-base font-bold tracking-wide hover:bg-white/5 transition-colors">
                             <span className="material-symbols-outlined mr-2">rate_review</span>
                             <span>Feedback</span>
