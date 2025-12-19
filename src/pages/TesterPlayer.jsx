@@ -116,16 +116,16 @@ const TesterPlayer = () => {
                     className="w-full text-center mb-6 transition-all duration-500"
                     animate={{ scale: showUI ? 1 : 1.05, y: showUI ? 0 : 20 }}
                 >
-                    <div className="text-xs font-bold text-primary tracking-widest uppercase mb-1">{track.isAlbum ? track.title : 'SINGLE'}</div>
-                    <h1 className="text-black dark:text-white text-2xl font-bold leading-tight tracking-tight mb-1">{currentTitle}</h1>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">{track.version}</p>
+                    <div className="text-xs font-bold text-primary tracking-widest uppercase mb-1 font-mono border inline-block px-1 border-primary/30">{track.isAlbum ? track.title : 'SINGLE'}</div>
+                    <h1 className="text-black dark:text-white text-2xl font-bold leading-tight tracking-tight mb-1 font-mono uppercase mt-2">{currentTitle}</h1>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm font-medium font-mono">{track.version}</p>
 
                     <motion.div
                         className="mt-2 flex items-center justify-center gap-2"
                         animate={{ opacity: showUI ? 1 : 0 }}
                     >
-                        <span className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-green-500 animate-pulse' : 'bg-gray-500'}`}></span>
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{isPlaying ? 'Playing Now' : 'Paused'}</p>
+                        <span className={`w-2 h-2 ${isPlaying ? 'bg-green-500 animate-pulse' : 'bg-gray-500'}`}></span>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest font-mono">{isPlaying ? 'Playing Now' : 'Paused'}</p>
                     </motion.div>
                 </motion.div>
 
@@ -147,12 +147,12 @@ const TesterPlayer = () => {
                         handleSeek(pct * duration);
                         vibrate(5);
                     }}>
-                        <div className="w-full h-1 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden group-hover:h-2 transition-all">
+                        <div className="w-full h-1 bg-gray-200 dark:bg-gray-800 overflow-hidden group-hover:h-2 transition-all">
                             <div className="h-full bg-primary transition-all duration-100 ease-linear" style={{ width: `${progress}%` }}></div>
                         </div>
                     </div>
 
-                    <div className="w-full flex justify-between text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 px-0">
+                    <div className="w-full flex justify-between text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 px-0 font-mono">
                         <span>{formatTime(currentTime)}</span>
                         <span>{formatTime(duration)}</span>
                     </div>
@@ -161,22 +161,22 @@ const TesterPlayer = () => {
                     <div className="flex items-center justify-between w-full gap-4 mb-4">
                         {/* ... (Keep Controls, update logic if needed for prev/next track later) ... */}
                         <button className="group flex flex-col items-center gap-1 focus:outline-none" onClick={() => vibrate()}>
-                            <div className="w-10 h-10 rounded-full border border-gray-300 dark:border-gray-700 flex items-center justify-center text-gray-400 group-hover:border-primary group-hover:text-primary transition-all group-active:scale-95">
+                            <div className="w-10 h-10 border border-gray-300 dark:border-gray-700 flex items-center justify-center text-gray-400 group-hover:border-primary group-hover:text-primary transition-all group-active:scale-95 bg-black">
                                 <span className="material-symbols-outlined filled-icon text-lg">thumb_down</span>
                             </div>
                         </button>
                         <div className="flex items-center gap-4">
-                            <button className="text-black dark:text-white hover:text-primary transition-colors focus:outline-none p-2" onClick={() => {
+                            <button className="text-black dark:text-white hover:text-primary transition-colors focus:outline-none p-2 border border-transparent hover:border-white/10" onClick={() => {
                                 if (track.isAlbum && currentTrackIndex > 0) { setCurrentTrackIndex(i => i - 1); }
                                 else { handleSeek(Math.max(0, currentTime - 10)); }
                                 vibrate();
                             }}>
                                 <span className="material-symbols-outlined text-3xl">{track.isAlbum ? 'skip_previous' : 'replay_10'}</span>
                             </button>
-                            <button onClick={() => { setIsPlaying(!isPlaying); vibrate(20); }} className="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-white shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:scale-105 active:scale-95 transition-all focus:outline-none">
+                            <button onClick={() => { setIsPlaying(!isPlaying); vibrate(20); }} className="w-16 h-16 bg-primary flex items-center justify-center text-black border-2 border-transparent hover:border-white hover:scale-105 active:scale-95 transition-all focus:outline-none">
                                 <span className="material-symbols-outlined" style={{ fontSize: '36px', fontVariationSettings: "'FILL' 1" }}>{isPlaying ? 'pause' : 'play_arrow'}</span>
                             </button>
-                            <button className="text-black dark:text-white hover:text-primary transition-colors focus:outline-none p-2" onClick={() => {
+                            <button className="text-black dark:text-white hover:text-primary transition-colors focus:outline-none p-2 border border-transparent hover:border-white/10" onClick={() => {
                                 if (track.isAlbum && currentTrackIndex < track.trackList.length - 1) { setCurrentTrackIndex(i => i + 1); }
                                 else { handleSeek(Math.min(duration, currentTime + 10)); }
                                 vibrate();
@@ -185,7 +185,7 @@ const TesterPlayer = () => {
                             </button>
                         </div>
                         <button className="group flex flex-col items-center gap-1 focus:outline-none" onClick={() => vibrate()}>
-                            <div className="w-10 h-10 rounded-full border border-gray-300 dark:border-gray-700 flex items-center justify-center text-gray-400 group-hover:border-primary group-hover:text-primary transition-all group-active:scale-95">
+                            <div className="w-10 h-10 border border-gray-300 dark:border-gray-700 flex items-center justify-center text-gray-400 group-hover:border-primary group-hover:text-primary transition-all group-active:scale-95 bg-black">
                                 <span className="material-symbols-outlined filled-icon text-lg">thumb_up</span>
                             </div>
                         </button>
@@ -195,19 +195,19 @@ const TesterPlayer = () => {
                 {/* Album Tracklist */}
                 {track.isAlbum && (
                     <motion.div
-                        className="w-full bg-surface-dark/50 rounded-2xl border border-white/5 p-2 flex flex-col gap-1"
+                        className="w-full bg-surface-dark/50 border border-white/5 p-2 flex flex-col gap-1"
                         animate={{ opacity: showUI ? 1 : 0 }}
                     >
                         {track.trackList.map((t, idx) => (
                             <button
                                 key={idx}
                                 onClick={() => { setCurrentTrackIndex(idx); setIsPlaying(true); vibrate(); }}
-                                className={`w-full flex items-center justify-between p-3 rounded-xl text-left transition-colors ${currentTrackIndex === idx ? 'bg-primary text-black' : 'hover:bg-white/5 text-zinc-400'}`}
+                                className={`w-full flex items-center justify-between p-3 text-left transition-colors border-b last:border-0 border-white/5 ${currentTrackIndex === idx ? 'bg-primary text-black' : 'hover:bg-white/5 text-zinc-400'}`}
                             >
                                 <div className="flex items-center gap-3">
                                     <span className={`text-xs font-mono font-bold w-4 ${currentTrackIndex === idx ? 'text-black' : 'text-zinc-600'}`}>{idx + 1}</span>
                                     <div className="flex flex-col">
-                                        <span className={`text-sm font-bold leading-tight ${currentTrackIndex === idx ? 'text-black' : 'text-white'}`}>{t.title}</span>
+                                        <span className={`text-sm font-bold leading-tight font-mono uppercase ${currentTrackIndex === idx ? 'text-black' : 'text-white'}`}>{t.title}</span>
                                     </div>
                                 </div>
                                 {currentTrackIndex === idx && <span className="material-symbols-outlined text-lg animate-pulse">graphic_eq</span>}
