@@ -59,6 +59,20 @@ const ArtistABSetup = () => {
         }));
     };
 
+    const moveTrackUp = (index) => {
+        if (index === 0) return;
+        const newTracks = [...albumTracks];
+        [newTracks[index - 1], newTracks[index]] = [newTracks[index], newTracks[index - 1]];
+        setAlbumTracks(newTracks);
+    };
+
+    const moveTrackDown = (index) => {
+        if (index === albumTracks.length - 1) return;
+        const newTracks = [...albumTracks];
+        [newTracks[index + 1], newTracks[index]] = [newTracks[index], newTracks[index + 1]];
+        setAlbumTracks(newTracks);
+    };
+
     const handleLaunch = () => {
         if (mode === 'single') {
             if (!isValidA) {
@@ -201,9 +215,17 @@ const ArtistABSetup = () => {
 
                         <div className="flex flex-col gap-3">
                             {albumTracks.map((track, index) => (
-                                <div key={track.id} className="bg-surface-dark p-3 rounded-xl border border-zinc-800 flex flex-col gap-3 relative">
+                                <div key={track.id} className="bg-surface-dark p-3 rounded-xl border border-zinc-800 flex flex-col gap-3 relative animate-fadeIn">
                                     <div className="flex items-center gap-2">
-                                        <span className="text-zinc-500 text-xs font-mono w-4">{index + 1}</span>
+                                        <div className="flex flex-col text-zinc-600">
+                                            <button onClick={() => moveTrackUp(index)} disabled={index === 0} className="hover:text-white disabled:opacity-30 disabled:hover:text-zinc-600">
+                                                <span className="material-symbols-outlined text-sm">expand_less</span>
+                                            </button>
+                                            <button onClick={() => moveTrackDown(index)} disabled={index === albumTracks.length - 1} className="hover:text-white disabled:opacity-30 disabled:hover:text-zinc-600">
+                                                <span className="material-symbols-outlined text-sm">expand_more</span>
+                                            </button>
+                                        </div>
+                                        <span className="text-zinc-500 text-xs font-mono w-4 text-center">{index + 1}</span>
                                         <input
                                             type="text"
                                             placeholder="Track Title"
@@ -212,12 +234,12 @@ const ArtistABSetup = () => {
                                             onChange={(e) => updateAlbumTrack(track.id, 'title', e.target.value)}
                                         />
                                         {albumTracks.length > 1 && (
-                                            <button onClick={() => removeAlbumTrack(track.id)} className="text-zinc-500 hover:text-red-400">
+                                            <button onClick={() => removeAlbumTrack(track.id)} className="text-zinc-500 hover:text-red-400 ml-2">
                                                 <span className="material-symbols-outlined text-lg">delete</span>
                                             </button>
                                         )}
                                     </div>
-                                    <div className={`flex items-center gap-2 bg-black/30 rounded-lg px-2 py-1.5 border ${track.valid ? 'border-green-500/30' : 'border-transparent'}`}>
+                                    <div className={`flex items-center gap-2 bg-black/30 rounded-lg px-2 py-1.5 border ${track.valid ? 'border-green-500/30' : 'border-transparent'} ml-8`}>
                                         <span className={`material-symbols-outlined text-sm ${track.valid ? 'text-green-500' : 'text-zinc-600'}`}>link</span>
                                         <input
                                             type="text"
