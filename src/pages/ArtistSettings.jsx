@@ -1,16 +1,18 @@
 import { useNavigate } from 'react-router-dom';
 import ArtistBottomNav from '../components/ArtistBottomNav';
 import { useData } from '../context/DataContext';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 const ArtistSettings = () => {
     const navigate = useNavigate();
     const { artistProfile, updateProfile } = useData();
+    const fileInputRef = useRef(null);
 
     // Local state for form management
     const [formData, setFormData] = useState({
         name: artistProfile.name,
         bio: artistProfile.bio,
+        photo: artistProfile.photo,
         instagram: artistProfile.socials.instagram,
         tiktok: artistProfile.socials.tiktok,
         facebook: artistProfile.socials.facebook,
@@ -26,10 +28,26 @@ const ArtistSettings = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handlePhotoClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData(prev => ({ ...prev, photo: reader.result }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleSave = () => {
         updateProfile({
             name: formData.name,
             bio: formData.bio,
+            photo: formData.photo,
             socials: {
                 instagram: formData.instagram,
                 tiktok: formData.tiktok,
@@ -57,10 +75,10 @@ const ArtistSettings = () => {
             <main className="flex-1 flex flex-col gap-6 px-6 pt-6">
                 {/* Profile Photo Section */}
                 <div className="flex flex-col items-center gap-3">
-                    <div className="relative group cursor-pointer">
+                    <div className="relative group cursor-pointer" onClick={handlePhotoClick}>
                         <div className="size-28 rounded-full bg-surface-dark border-2 border-primary/50 relative overflow-hidden">
                             <img
-                                src={artistProfile.photo}
+                                src={formData.photo}
                                 alt="Profile"
                                 className="w-full h-full object-cover opacity-80 group-hover:opacity-50 transition-opacity"
                             />
@@ -71,6 +89,13 @@ const ArtistSettings = () => {
                         <div className="absolute bottom-0 right-1 bg-primary text-black p-1.5 border-2 border-background-dark">
                             <span className="material-symbols-outlined text-[16px] leading-none">edit</span>
                         </div>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            className="hidden"
+                            onChange={handleFileChange}
+                            accept="image/*"
+                        />
                     </div>
                     <p className="text-sm font-medium text-primary">Change Profile Photo</p>
                 </div>
