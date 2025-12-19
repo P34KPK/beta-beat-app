@@ -101,24 +101,24 @@ const ArtistDashboard = () => {
                         <p className="text-slate-400 text-xs">Let's check your stats</p>
                     </div>
                 </div>
-                <button className="flex items-center justify-center rounded-full size-10 bg-surface-dark border border-border-dark text-white hover:bg-white/10 transition-colors">
+                <button className="flex items-center justify-center size-10 bg-surface-dark border border-border-dark text-white hover:bg-white/10 transition-colors">
                     <span className="material-symbols-outlined text-white" style={{ fontSize: '24px' }}>notifications</span>
                 </button>
             </header>
 
             <section className="px-6 py-4">
                 <div className="flex flex-wrap gap-4">
-                    <div className="flex flex-1 min-w-[100px] flex-col gap-1 rounded-[2rem] bg-surface-dark border border-border-dark p-5 items-center text-center">
+                    <div className="flex flex-1 min-w-[100px] flex-col gap-1 bg-surface-dark border border-border-dark p-5 items-center text-center">
                         <span className="material-symbols-outlined text-primary mb-1" style={{ fontSize: '28px' }}>group</span>
                         <p className="text-white text-3xl font-bold leading-tight">{artistProfile.stats.testers}</p>
                         <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Testers</p>
                     </div>
-                    <div className="flex flex-1 min-w-[100px] flex-col gap-1 rounded-[2rem] bg-surface-dark border border-border-dark p-5 items-center text-center">
+                    <div className="flex flex-1 min-w-[100px] flex-col gap-1 bg-surface-dark border border-border-dark p-5 items-center text-center">
                         <span className="material-symbols-outlined text-primary mb-1" style={{ fontSize: '28px' }}>graphic_eq</span>
                         <p className="text-white text-3xl font-bold leading-tight">{artistProfile.stats.tracks}</p>
                         <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Tracks</p>
                     </div>
-                    <div className="flex flex-1 min-w-[100px] flex-col gap-1 rounded-[2rem] bg-surface-dark border border-border-dark p-5 items-center text-center">
+                    <div className="flex flex-1 min-w-[100px] flex-col gap-1 bg-surface-dark border border-border-dark p-5 items-center text-center">
                         <span className="material-symbols-outlined text-primary mb-1" style={{ fontSize: '28px' }}>star</span>
                         <p className="text-primary text-3xl font-bold leading-tight">{artistProfile.stats.score}</p>
                         <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Score</p>
@@ -132,16 +132,16 @@ const ArtistDashboard = () => {
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex gap-3">
-                        <button onClick={handleInvite} className="flex flex-1 cursor-pointer items-center justify-center rounded-full h-14 px-6 bg-primary text-black text-base font-bold tracking-wide hover:bg-orange-600 transition-colors shadow-[0_0_20px_rgba(242,127,13,0.3)]">
+                        <button onClick={handleInvite} className="flex flex-1 cursor-pointer items-center justify-center h-14 px-6 bg-primary text-black text-base font-bold tracking-wide hover:bg-orange-600 transition-colors shadow-[0_0_20px_rgba(242,127,13,0.3)]">
                             <span className="material-symbols-outlined mr-2">person_add</span>
                             <span>Invite</span>
                         </button>
-                        <button onClick={() => setShowInviteCard(true)} className="flex cursor-pointer items-center justify-center rounded-full h-14 w-14 bg-surface-dark border border-border-dark text-white hover:bg-white/5 transition-colors">
+                        <button onClick={() => setShowInviteCard(true)} className="flex cursor-pointer items-center justify-center h-14 w-14 bg-surface-dark border border-border-dark text-white hover:bg-white/5 transition-colors">
                             <span className="material-symbols-outlined text-primary">qr_code_2</span>
                         </button>
                     </div>
                     <div className="flex gap-3">
-                        <button onClick={() => navigate('/artist-feedback')} className="flex flex-1 cursor-pointer items-center justify-center rounded-full h-14 px-6 bg-surface-dark border border-border-dark text-white text-base font-bold tracking-wide hover:bg-white/5 transition-colors">
+                        <button onClick={() => navigate('/artist-feedback')} className="flex flex-1 cursor-pointer items-center justify-center h-14 px-6 bg-surface-dark border border-border-dark text-white text-base font-bold tracking-wide hover:bg-white/5 transition-colors">
                             <span className="material-symbols-outlined mr-2">rate_review</span>
                             <span>Feedback</span>
                         </button>
@@ -155,13 +155,13 @@ const ArtistDashboard = () => {
                     {tracks.length > 0 && <a className="text-primary text-sm font-semibold hover:text-white transition-colors" href="#" onClick={(e) => { e.preventDefault(); navigate('/artist-tracks'); }}>View All</a>}
                 </div>
                 {artistProfile.stats.tracks > 0 && tracks[0] ? (
-                    <div className="bg-surface-dark border border-border-dark rounded-[2rem] p-4 flex items-center gap-4 relative overflow-hidden group">
+                    <div className="bg-surface-dark border border-border-dark p-4 flex items-center gap-4 relative overflow-hidden group">
                         <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none">
                             <span className="material-symbols-outlined text-[120px] text-white">graphic_eq</span>
                         </div>
                         <div className="relative shrink-0">
-                            <div className="size-20 rounded-2xl bg-cover bg-center" style={{ backgroundImage: `url("${tracks[0].cover}")` }}></div>
-                            <div className="absolute -bottom-2 -right-2 bg-primary text-black text-[10px] font-bold px-2 py-1 rounded-full">{tracks[0].version}</div>
+                            <div className="size-20 bg-cover bg-center" style={{ backgroundImage: `url("${tracks[0].cover}")` }}></div>
+                            <div className="absolute -bottom-2 -right-2 bg-primary text-black text-[10px] font-bold px-2 py-1">{tracks[0].version}</div>
                         </div>
                         <div className="flex-1 min-w-0 z-10">
                             <h4 className="text-white font-bold text-lg truncate">{tracks[0].title}</h4>
@@ -170,7 +170,7 @@ const ArtistDashboard = () => {
                                 <p className="text-slate-400 text-sm truncate">Latest Release</p>
                             </div>
                         </div>
-                        <button className="size-10 rounded-full bg-white text-black flex items-center justify-center shrink-0 hover:scale-105 transition-transform">
+                        <button className="size-10 bg-white text-black flex items-center justify-center shrink-0 hover:scale-105 transition-transform">
                             <span className="material-symbols-outlined filled" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
                         </button>
                     </div>
