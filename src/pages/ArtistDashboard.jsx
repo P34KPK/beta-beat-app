@@ -48,9 +48,7 @@ const ArtistDashboard = () => {
                             {/* Brand */}
                             <div className="mb-6 relative">
                                 <div className="absolute -inset-4 bg-primary/20 blur-xl rounded-full"></div>
-                                <h1 className="relative text-3xl font-black italic tracking-tighter text-white transform -skew-x-12">
-                                    BETA <span className="text-primary">BEAT</span>
-                                </h1>
+                                <img src="/beta-beat-logo.png" alt="BETA BEAT" className="relative h-12 object-contain" />
                             </div>
 
                             <p className="text-zinc-400 text-xs font-bold uppercase tracking-[0.2em] mb-8">Official Invitation</p>
@@ -62,7 +60,7 @@ const ArtistDashboard = () => {
                             </div>
 
                             <h2 className="text-2xl font-bold text-white leading-tight mb-2 uppercase">{artistProfile.name}</h2>
-                            <p className="text-zinc-300 text-sm px-4 leading-relaxed mb-8">
+                            <p className="text-zinc-300 text-sm px-4 leading-relaxed mb-6">
                                 Invites you to join the exclusive testing phase for the new project.
                             </p>
 
@@ -71,6 +69,12 @@ const ArtistDashboard = () => {
                                 <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1">Access Code</p>
                                 <p className="text-2xl font-mono font-bold text-primary tracking-widest">{inviteCode}</p>
                             </div>
+
+                            {/* Action Buttons */}
+                            <button onClick={handleInvite} className="w-full py-3 rounded-full bg-primary text-black font-bold text-sm shadow-lg shadow-primary/20 hover:bg-orange-600 transition-colors flex items-center justify-center gap-2 mb-2">
+                                <span className="material-symbols-outlined text-lg">share</span>
+                                Share Invite
+                            </button>
 
                             <p className="text-[10px] text-zinc-600 font-mono">beta-beat-app.vercel.app</p>
 
