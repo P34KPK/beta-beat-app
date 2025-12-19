@@ -4,7 +4,31 @@ import { useData } from '../context/DataContext';
 
 const ArtistDashboard = () => {
     const navigate = useNavigate();
-    const { artistProfile, tracks } = useData();
+    const { artistProfile, tracks, inviteCode } = useData();
+
+    const handleInvite = async () => {
+        const url = `${window.location.origin}/tester-access`;
+        const text = `Yo! Help me test my new music on BETA BEAT.\n\nCode: ${inviteCode}\nLink: ${url}`;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'BETA BEAT Music Test',
+                    text: text,
+                    url: url
+                });
+            } catch (err) {
+                console.log('Share canceled', err);
+            }
+        } else {
+            try {
+                await navigator.clipboard.writeText(text);
+                alert("Invite copied to clipboard!\n\nSend it to your friends.");
+            } catch (err) {
+                alert("Could not copy invite. Code: " + inviteCode);
+            }
+        }
+    };
 
     return (
         <div className="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto shadow-2xl pb-24">
@@ -50,7 +74,7 @@ const ArtistDashboard = () => {
                 </div>
                 <div className="flex flex-col gap-3">
                     <div className="flex gap-3">
-                        <button className="flex flex-1 cursor-pointer items-center justify-center rounded-full h-14 px-6 bg-primary text-black text-base font-bold tracking-wide hover:bg-orange-600 transition-colors shadow-[0_0_20px_rgba(242,127,13,0.3)]">
+                        <button onClick={handleInvite} className="flex flex-1 cursor-pointer items-center justify-center rounded-full h-14 px-6 bg-primary text-black text-base font-bold tracking-wide hover:bg-orange-600 transition-colors shadow-[0_0_20px_rgba(242,127,13,0.3)]">
                             <span className="material-symbols-outlined mr-2">person_add</span>
                             <span>Invite Testers</span>
                         </button>
