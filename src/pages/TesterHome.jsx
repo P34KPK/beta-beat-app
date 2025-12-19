@@ -64,6 +64,35 @@ const TesterHome = () => {
                             <span className="material-symbols-outlined text-blue-400 text-sm verified-badge">verified</span>
                         </div>
                         <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-3 leading-snug font-mono text-xs">{artistProfile.bio}</p>
+
+                        <div className="flex flex-wrap gap-2 mt-3">
+                            {Object.entries(artistProfile.socials || {}).map(([key, url]) => {
+                                if (!url) return null;
+                                const label = {
+                                    instagram: 'IG',
+                                    tiktok: 'TT',
+                                    facebook: 'FB',
+                                    soundcloud: 'SC',
+                                    snapchat: 'SN',
+                                    linktree: 'LT',
+                                    discord: 'DC',
+                                    twitter: 'X',
+                                    website: 'WEB'
+                                }[key] || key.substring(0, 2).toUpperCase();
+
+                                return (
+                                    <a
+                                        key={key}
+                                        href={url.startsWith('http') ? url : `https://${url}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center justify-center h-6 px-1.5 border border-white/20 hover:bg-white hover:text-black hover:border-white transition-colors text-[10px] font-mono font-bold uppercase text-zinc-400"
+                                    >
+                                        {label}
+                                    </a>
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
             </div>
