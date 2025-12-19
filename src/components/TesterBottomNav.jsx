@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom';
+import { useData } from '../context/DataContext';
 
 const TesterBottomNav = ({ active }) => {
     const navigate = useNavigate();
+    const { testerProfile } = useData();
 
     const isActive = (key) => active === key;
     const activeColor = "text-primary";
@@ -22,9 +24,9 @@ const TesterBottomNav = ({ active }) => {
                     <span className="material-symbols-outlined" style={isActive('donate') ? { fontVariationSettings: "'FILL' 1" } : {}}>volunteer_activism</span>
                     <span className="text-[10px] font-bold uppercase tracking-wide">Donate</span>
                 </button>
-                <button className={`flex flex-col items-center gap-1 w-16 ${isActive('profile') ? activeColor : inactiveColor}`}>
+                <button onClick={() => navigate('/tester-profile')} className={`flex flex-col items-center gap-1 w-16 ${isActive('profile') ? activeColor : inactiveColor}`}>
                     <div className="w-6 h-6 rounded-full bg-gray-700 overflow-hidden relative border border-current">
-                        <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCJ7H-319DJkqr-RyeU9cEkmih5kHLuAdPpVZqYRWjX4N-Ll0ppEa9K9EJTQYQuODW7KRaqMBykq7Jo44hWc4HREI5_MpptVxYnHwfSHNTuOVCZQvNdIVuVPEIOpCc8WKEbUu-YidXVoECXu-N3rwIn69WrK0v2sRHimK3-gvUeg-EaToPUfeBQniKeMCU4riQJmdlrZpCdfHuucGc_NYmdI9cpkn_z2YtylWo6ttsOMzHxcGvpgWULzZEqOXOTwaXI4DNUGipMZbym')" }}></div>
+                        <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url('${testerProfile?.photo || "https://lh3.googleusercontent.com/aida-public/AB6AXuCJ7H-319DJkqr-RyeU9cEkmih5kHLuAdPpVZqYRWjX4N-Ll0ppEa9K9EJTQYQuODW7KRaqMBykq7Jo44hWc4HREI5_MpptVxYnHwfSHNTuOVCZQvNdIVuVPEIOpCc8WKEbUu-YidXVoECXu-N3rwIn69WrK0v2sRHimK3-gvUeg-EaToPUfeBQniKeMCU4riQJmdlrZpCdfHuucGc_NYmdI9cpkn_z2YtylWo6ttsOMzHxcGvpgWULzZEqOXOTwaXI4DNUGipMZbym"}')` }}></div>
                     </div>
                     <span className="text-[10px] font-bold uppercase tracking-wide">Profile</span>
                 </button>

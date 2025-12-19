@@ -98,6 +98,19 @@ export const DataProvider = ({ children }) => {
         setTesterSessions(prev => [...prev, { ...sessionData, id: Date.now() }]);
     };
 
+    const [testerProfile, setTesterProfile] = useState(() => {
+        const saved = localStorage.getItem('testerProfile');
+        return saved ? JSON.parse(saved) : { name: '', email: '', photo: '', history: [] };
+    });
+
+    useEffect(() => {
+        localStorage.setItem('testerProfile', JSON.stringify(testerProfile));
+    }, [testerProfile]);
+
+    const updateTesterProfile = (newData) => {
+        setTesterProfile(prev => ({ ...prev, ...newData }));
+    };
+
     return (
         <DataContext.Provider value={{
             artistProfile,
@@ -108,7 +121,9 @@ export const DataProvider = ({ children }) => {
             feedback,
             addFeedback,
             testerSessions,
-            logSession
+            logSession,
+            testerProfile,
+            updateTesterProfile
         }}>
             {children}
         </DataContext.Provider>

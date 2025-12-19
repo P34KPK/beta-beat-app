@@ -12,6 +12,7 @@ import TesterHome from './pages/TesterHome';
 import TesterPlayer from './pages/TesterPlayer';
 import TesterFeedback from './pages/TesterFeedback';
 import TesterSupport from './pages/TesterSupport';
+import TesterProfile from './pages/TesterProfile';
 
 import { DataProvider } from './context/DataContext';
 
@@ -38,6 +39,7 @@ function App() {
           <Route path="/tester-player" element={<TesterPlayer />} />
           <Route path="/tester-feedback" element={<TesterFeedback />} />
           <Route path="/tester-support" element={<TesterSupport />} />
+          <Route path="/tester-profile" element={<TesterProfile />} />
         </Routes>
       </AnimatePresence>
     </DataProvider>
