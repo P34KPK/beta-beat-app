@@ -7,21 +7,65 @@ import { useData } from '../context/DataContext';
 const TesterPlayer = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { tracks, logSession } = useData();
+    const { tracks, logSession, artistProfile } = useData();
     const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+    // Waveform visualization data
+    const [waveformData] = useState(() => Array.from({ length: 45 }, () => Math.random() * 0.5 + 0.3));
     const [hasLogged, setHasLogged] = useState(false); // Prevent double logging
 
-    const currentAudioUrl = track?.isAlbum
+    // State definitions
+    const audioRef = useRef(null);
+    const canvasRef = useRef(null);
+    const [isPlaying, setIsPlaying] = useState(true);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [progress, setProgress] = useState(0);
+    const [showUI, setShowUI] = useState(true);
+    const [audioError, setAudioError] = useState(null);
+    const [showPlaylist, setShowPlaylist] = useState(false);
+
+    // Resolve Track
+    const trackId = location.state?.trackId;
+    const track = tracks.find(t => t.id === trackId) || tracks[0];
+
+    useEffect(() => {
+        if (!track) navigate('/tester-home');
+    }, [track, navigate]);
+
+    if (!track) return null;
+
+    const rawAudioUrl = track?.isAlbum
         ? track.trackList[currentTrackIndex]?.audioUrl
         : track?.audioUrl;
+
+    const currentAudioUrl = rawAudioUrl;
 
     const currentTitle = track?.isAlbum
         ? track.trackList[currentTrackIndex]?.title
         : track?.title;
 
-    // ... (rest of effects)
+    // Helper Functions
+    const formatTime = (time) => {
+        if (!time || isNaN(time)) return '0:00';
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    };
 
-    // Real Audio Playback Logic
+    const vibrate = (ms = 10) => {
+        if (navigator.vibrate) navigator.vibrate(ms);
+    };
+
+    const handleSeek = (newTime) => {
+        const audio = audioRef.current;
+        if (audio) {
+            audio.currentTime = newTime;
+            setCurrentTime(newTime);
+            setProgress((newTime / duration) * 100);
+        }
+    };
+
+    // Audio Logic
     useEffect(() => {
         const audio = audioRef.current;
         if (!audio) return;
@@ -31,8 +75,12 @@ const TesterPlayer = () => {
             setProgress((audio.currentTime / audio.duration) * 100);
         };
 
+        const handleLoadedMetadata = () => {
+            setDuration(audio.duration);
+            if (isPlaying) audio.play().catch(e => console.error("Auto-play failed:", e));
+        };
+
         const handleEnded = () => {
-            // Log successful listen
             if (!hasLogged) {
                 logSession({
                     trackId: track.id,
@@ -47,7 +95,6 @@ const TesterPlayer = () => {
             }
 
             if (track.isAlbum && currentTrackIndex < track.trackList.length - 1) {
-                // Auto-advance to next track
                 setCurrentTrackIndex(prev => prev + 1);
             } else {
                 setIsPlaying(false);
@@ -57,33 +104,20 @@ const TesterPlayer = () => {
             }
         };
 
-        const handlePlay = () => {
-            if (!sessionStorage.getItem('testerId')) {
-                sessionStorage.setItem('testerId', `Tester-${Math.floor(Math.random() * 1000)}`);
-            }
-            setHasLogged(false);
-        };
-
         audio.addEventListener('timeupdate', handleTimeUpdate);
+        audio.addEventListener('loadedmetadata', handleLoadedMetadata);
         audio.addEventListener('ended', handleEnded);
-        audio.addEventListener('play', handlePlay);
 
-        // Auto-play on mount or track change if isPlaying is true
         if (isPlaying) {
-            resetActivity();
-            // Small timeout to ensure src is updated
-            setTimeout(() => {
-                audio.play().catch(e => console.error("Playback failed:", e));
-            }, 50);
+            audio.play().catch(e => console.error("Play failed:", e));
         } else {
             audio.pause();
-            setShowUI(true);
         }
 
         return () => {
             audio.removeEventListener('timeupdate', handleTimeUpdate);
+            audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
             audio.removeEventListener('ended', handleEnded);
-            audio.removeEventListener('play', handlePlay);
         };
     }, [isPlaying, currentTrackIndex, track, currentTitle, hasLogged]);
 
@@ -101,127 +135,213 @@ const TesterPlayer = () => {
     // ...
 
     return (
-        <motion.div
-            // ... (keep initial props)
-            className="relative flex h-full min-h-screen w-full flex-col bg-background-light dark:bg-background-dark overflow-y-auto max-w-md mx-auto no-scrollbar"
-        >
-            <audio ref={audioRef} src={currentAudioUrl} preload="metadata" />
+        <div className="relative flex h-screen w-full flex-col bg-gradient-to-b from-zinc-900 via-black to-black text-white font-display overflow-y-auto no-scrollbar">
+            {/* Top Bar / Drag Handle */}
+            <div className="w-full h-14 flex items-center justify-center shrink-0 z-10 opacity-50">
+                <div className="w-12 h-1 bg-white/20 rounded-full"></div>
+            </div>
 
-            {/* Header */}
-            {/* ... (keep header) ... */}
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col items-center justify-center px-8 pb-8 gap-8 w-full max-w-md mx-auto">
 
-            <div className="flex-1 flex flex-col items-center justify-start w-full max-w-md mx-auto px-6 relative z-10 pt-10 pb-32">
-                {/* Track Info */}
-                <motion.div
-                    className="w-full text-center mb-6 transition-all duration-500"
-                    animate={{ scale: showUI ? 1 : 1.05, y: showUI ? 0 : 20 }}
-                >
-                    <div className="text-xs font-bold text-primary tracking-widest uppercase mb-1 font-mono border inline-block px-1 border-primary/30">{track.isAlbum ? track.title : 'SINGLE'}</div>
-                    <h1 className="text-black dark:text-white text-2xl font-bold leading-tight tracking-tight mb-1 font-mono uppercase mt-2">{currentTitle}</h1>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm font-medium font-mono">{track.version}</p>
-
-                    <motion.div
-                        className="mt-2 flex items-center justify-center gap-2"
-                        animate={{ opacity: showUI ? 1 : 0 }}
-                    >
-                        <span className={`w-2 h-2 ${isPlaying ? 'bg-green-500 animate-pulse' : 'bg-gray-500'}`}></span>
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest font-mono">{isPlaying ? 'Playing Now' : 'Paused'}</p>
-                    </motion.div>
-                </motion.div>
-
-                {/* Canvas Visualizer */}
-                <div className="w-full h-32 flex items-center justify-center mb-4 relative overflow-hidden">
-                    <canvas ref={canvasRef} width={400} height={128} className="w-full h-full" />
+                {/* Cover Art - Enhanced Shadow */}
+                <div className="w-full aspect-square relative shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)] rounded-2xl overflow-hidden bg-zinc-900 border border-white/5 ring-1 ring-white/10">
+                    <img src={track?.cover} alt={currentTitle} className="w-full h-full object-cover" />
                 </div>
 
-                {/* Progress Bar & Controls Wrapper */}
-                <motion.div
-                    className="w-full transition-opacity duration-500 mb-8"
-                    style={{ opacity: showUI ? 1 : 0, pointerEvents: showUI ? 'auto' : 'none' }}
-                >
-                    {/* ... (Keep Scrub Bar & Time) ... */}
-                    <div className="w-full mb-2 cursor-pointer group" onClick={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        const x = e.clientX - rect.left;
-                        const pct = x / rect.width;
-                        handleSeek(pct * duration);
-                        vibrate(5);
-                    }}>
-                        <div className="w-full h-1 bg-gray-200 dark:bg-gray-800 overflow-hidden group-hover:h-2 transition-all">
-                            <div className="h-full bg-primary transition-all duration-100 ease-linear" style={{ width: `${progress}%` }}></div>
+                {/* Track Info */}
+                <div className="w-full text-center space-y-1">
+                    <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight truncate px-2 text-white">{currentTitle}</h1>
+                    <p className="text-zinc-400 text-sm font-medium tracking-wide uppercase opacity-80">
+                        {track?.isAlbum ? `${artistProfile.name} • ${track.title}` : artistProfile.name}
+                    </p>
+                </div>
+
+                {/* Progress Bar & Time (Cleaner than Waveform) */}
+                <div className="w-full space-y-2 mt-4">
+                    <div
+                        className="group relative h-4 w-full flex items-center cursor-pointer"
+                        onClick={(e) => {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            const pct = (e.clientX - rect.left) / rect.width;
+                            handleSeek(pct * duration);
+                        }}
+                    >
+                        {/* Track Line */}
+                        <div className="absolute inset-0 h-1 my-auto bg-white/20 rounded-full overflow-hidden">
+                            <div
+                                className="h-full bg-white transition-all duration-100 ease-out"
+                                style={{ width: `${progress}%` }}
+                            />
                         </div>
+                        {/* Drag Knob (Visible on Hover) */}
+                        <div
+                            className="absolute h-3 w-3 bg-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                            style={{ left: `${progress}%`, transform: 'translateX(-50%)' }}
+                        />
                     </div>
 
-                    <div className="w-full flex justify-between text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 px-0 font-mono">
+                    <div className="flex justify-between text-[11px] font-medium text-zinc-500 font-mono tracking-wider px-1">
                         <span>{formatTime(currentTime)}</span>
                         <span>{formatTime(duration)}</span>
                     </div>
+                </div>
 
-                    {/* Controls */}
-                    <div className="flex items-center justify-between w-full gap-4 mb-4">
-                        {/* ... (Keep Controls, update logic if needed for prev/next track later) ... */}
-                        <button className="group flex flex-col items-center gap-1 focus:outline-none" onClick={() => vibrate()}>
-                            <div className="w-10 h-10 border border-gray-300 dark:border-gray-700 flex items-center justify-center text-gray-400 group-hover:border-primary group-hover:text-primary transition-all group-active:scale-95 bg-black">
-                                <span className="material-symbols-outlined filled-icon text-lg">thumb_down</span>
-                            </div>
-                        </button>
-                        <div className="flex items-center gap-4">
-                            <button className="text-black dark:text-white hover:text-primary transition-colors focus:outline-none p-2 border border-transparent hover:border-white/10" onClick={() => {
-                                if (track.isAlbum && currentTrackIndex > 0) { setCurrentTrackIndex(i => i - 1); }
-                                else { handleSeek(Math.max(0, currentTime - 10)); }
-                                vibrate();
-                            }}>
-                                <span className="material-symbols-outlined text-3xl">{track.isAlbum ? 'skip_previous' : 'replay_10'}</span>
-                            </button>
-                            <button onClick={() => { setIsPlaying(!isPlaying); vibrate(20); }} className="w-16 h-16 bg-primary flex items-center justify-center text-black border-2 border-transparent hover:border-white hover:scale-105 active:scale-95 transition-all focus:outline-none">
-                                <span className="material-symbols-outlined" style={{ fontSize: '36px', fontVariationSettings: "'FILL' 1" }}>{isPlaying ? 'pause' : 'play_arrow'}</span>
-                            </button>
-                            <button className="text-black dark:text-white hover:text-primary transition-colors focus:outline-none p-2 border border-transparent hover:border-white/10" onClick={() => {
-                                if (track.isAlbum && currentTrackIndex < track.trackList.length - 1) { setCurrentTrackIndex(i => i + 1); }
-                                else { handleSeek(Math.min(duration, currentTime + 10)); }
-                                vibrate();
-                            }}>
-                                <span className="material-symbols-outlined text-3xl">{track.isAlbum ? 'skip_next' : 'forward_10'}</span>
-                            </button>
-                        </div>
-                        <button className="group flex flex-col items-center gap-1 focus:outline-none" onClick={() => vibrate()}>
-                            <div className="w-10 h-10 border border-gray-300 dark:border-gray-700 flex items-center justify-center text-gray-400 group-hover:border-primary group-hover:text-primary transition-all group-active:scale-95 bg-black">
-                                <span className="material-symbols-outlined filled-icon text-lg">thumb_up</span>
-                            </div>
-                        </button>
-                    </div>
-                </motion.div>
+                {/* Main Controls - Refined */}
+                <div className="flex items-center justify-center gap-8 w-full mt-2">
+                    <button className="text-zinc-500 hover:text-white transition-colors p-2 active:scale-95">
+                        <span className="material-symbols-outlined text-2xl">shuffle</span>
+                    </button>
 
-                {/* Album Tracklist */}
-                {track.isAlbum && (
-                    <motion.div
-                        className="w-full bg-surface-dark/50 border border-white/5 p-2 flex flex-col gap-1"
-                        animate={{ opacity: showUI ? 1 : 0 }}
+                    <button onClick={() => {
+                        if (track.isAlbum && currentTrackIndex > 0) setCurrentTrackIndex(i => i - 1);
+                        else handleSeek(0);
+                        vibrate();
+                    }} className="text-white hover:text-primary transition-colors p-2 active:scale-95">
+                        <span className="material-symbols-outlined text-4xl">skip_previous</span>
+                    </button>
+
+                    <button
+                        onClick={() => { setIsPlaying(!isPlaying); vibrate(20); }}
+                        className="flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all p-4"
                     >
-                        {track.trackList.map((t, idx) => (
-                            <button
-                                key={idx}
-                                onClick={() => { setCurrentTrackIndex(idx); setIsPlaying(true); vibrate(); }}
-                                className={`w-full flex items-center justify-between p-3 text-left transition-colors border-b last:border-0 border-white/5 ${currentTrackIndex === idx ? 'bg-primary text-black' : 'hover:bg-white/5 text-zinc-400'}`}
-                            >
-                                <div className="flex items-center gap-3">
-                                    <span className={`text-xs font-mono font-bold w-4 ${currentTrackIndex === idx ? 'text-black' : 'text-zinc-600'}`}>{idx + 1}</span>
-                                    <div className="flex flex-col">
-                                        <span className={`text-sm font-bold leading-tight font-mono uppercase ${currentTrackIndex === idx ? 'text-black' : 'text-white'}`}>{t.title}</span>
-                                    </div>
-                                </div>
-                                {currentTrackIndex === idx && <span className="material-symbols-outlined text-lg animate-pulse">graphic_eq</span>}
-                            </button>
-                        ))}
-                    </motion.div>
-                )}
+                        <span className="material-symbols-outlined text-6xl">
+                            {isPlaying ? 'pause' : 'play_arrow'}
+                        </span>
+                    </button>
+
+                    <button onClick={() => {
+                        if (track.isAlbum && currentTrackIndex < track.trackList.length - 1) setCurrentTrackIndex(i => i + 1);
+                        else handleSeek(duration);
+                        vibrate();
+                    }} className="text-white hover:text-primary transition-colors p-2 active:scale-95">
+                        <span className="material-symbols-outlined text-4xl">skip_next</span>
+                    </button>
+
+                    <button className="text-zinc-500 hover:text-white transition-colors p-2 active:scale-95">
+                        <span className="material-symbols-outlined text-2xl">repeat</span>
+                    </button>
+                </div>
             </div>
 
-            <motion.div style={{ opacity: showUI ? 1 : 0 }} className="transition-opacity duration-500">
-                <TesterBottomNav active="listen" />
-            </motion.div>
-        </motion.div>
-    )
+            {/* Bottom Footer Actions */}
+            <div className="w-full max-w-md mx-auto px-8 pb-10 flex items-center justify-between shrink-0">
+                <button
+                    onClick={() => setShowPlaylist(true)}
+                    className="text-zinc-600 hover:text-white transition-colors p-2"
+                >
+                    <span className="material-symbols-outlined text-2xl">queue_music</span>
+                </button>
+
+                <button
+                    onClick={() => navigate('/tester-feedback', { state: { trackId: track.id } })}
+                    className="h-9 px-5 bg-white/5 border border-white/10 rounded-full flex items-center gap-2 text-white hover:bg-white/10 transition-colors backdrop-blur-md"
+                >
+                    <span className="material-symbols-outlined text-sm">chat_bubble</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider">Comment</span>
+                </button>
+
+                <button onClick={() => {
+                    if (navigator.share) {
+                        navigator.share({ title: currentTitle, text: 'Check out this track on Beta Beat!', url: window.location.href });
+                    }
+                }} className="text-zinc-600 hover:text-white transition-colors p-2">
+                    <span className="material-symbols-outlined text-2xl">ios_share</span>
+                </button>
+            </div>
+
+            {/* Scrollable Album Tracklist (Below Fold) */}
+            {track.isAlbum && (
+                <div className="w-full max-w-md mx-auto px-6 pb-24 mt-2 border-t border-white/5 pt-8">
+                    <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-6 px-2">Album Tracks</h3>
+                    <div className="space-y-1">
+                        {track.trackList.map((t, i) => (
+                            <button
+                                key={i}
+                                onClick={() => setCurrentTrackIndex(i)}
+                                className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all text-left group ${i === currentTrackIndex ? 'bg-white/10' : 'hover:bg-white/5'}`}
+                            >
+                                <span className={`text-xs font-mono w-6 text-center ${i === currentTrackIndex ? 'text-primary' : 'text-zinc-600 group-hover:text-zinc-400'}`}>{i + 1}</span>
+                                <div className="flex-1 min-w-0">
+                                    <div className={`text-sm font-bold truncate ${i === currentTrackIndex ? 'text-white' : 'text-zinc-400 group-hover:text-zinc-200'}`}>{t.title}</div>
+                                </div>
+                                {i === currentTrackIndex && <span className="material-symbols-outlined text-sm text-primary">equalizer</span>}
+                                {i !== currentTrackIndex && <span className="material-symbols-outlined text-sm text-zinc-700 group-hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">play_arrow</span>}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Audio Error Banner */}
+            {audioError && (
+                <div className="absolute top-20 left-4 right-4 bg-red-500/90 text-white p-4 rounded-xl z-50 backdrop-blur-md border border-white/10 shadow-xl max-w-md mx-auto">
+                    <div className="flex items-start gap-3">
+                        <span className="material-symbols-outlined text-xl mt-0.5">warning</span>
+                        <div className="flex-1">
+                            <h3 className="font-bold text-sm mb-1">Playback Error</h3>
+                            <p className="text-xs opacity-90 mb-3">{audioError}</p>
+                            <a
+                                href={currentAudioUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-white text-red-600 text-xs font-bold px-3 py-1.5 rounded-lg inline-flex items-center gap-1 hover:bg-white/90 transition-colors"
+                            >
+                                Test Link <span className="material-symbols-outlined text-[10px]">open_in_new</span>
+                            </a>
+                        </div>
+                        <button onClick={() => setAudioError(null)} className="text-white/70 hover:text-white">
+                            <span className="material-symbols-outlined text-lg">close</span>
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            <audio
+                ref={audioRef}
+                src={currentAudioUrl}
+                key={currentAudioUrl}
+                preload="auto"
+                onError={(e) => {
+                    console.error("Audio playback error:", e.currentTarget.error);
+                    setAudioError(`Unable to play "${currentTitle}". The link might be private, expired, or blocked. Click below to test.`);
+                }}
+            />
+
+            {/* Playlist Overlay */}
+            {showPlaylist && (
+                <div className="absolute inset-0 bg-black/95 z-50 flex flex-col p-6 backdrop-blur-xl">
+                    <div className="flex items-center justify-between mb-8 pt-4">
+                        <h2 className="text-xl font-bold tracking-tight">Up Next</h2>
+                        <button onClick={() => setShowPlaylist(false)} className="p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
+                            <span className="material-symbols-outlined text-xl">close</span>
+                        </button>
+                    </div>
+                    <div className="flex-1 overflow-y-auto space-y-1 no-scrollbar">
+                        {track.isAlbum && track.trackList ? track.trackList.map((t, i) => (
+                            <button
+                                key={i}
+                                onClick={() => { setCurrentTrackIndex(i); setShowPlaylist(false); }}
+                                className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all ${i === currentTrackIndex ? 'bg-primary/20 text-primary border border-primary/20' : 'hover:bg-white/5 text-zinc-400 border border-transparent'}`}
+                            >
+                                <span className={`text-xs font-mono w-6 text-center ${i === currentTrackIndex ? 'opacity-100' : 'opacity-40'}`}>{i + 1}</span>
+                                <div className="flex flex-col items-start min-w-0 flex-1">
+                                    <span className={`text-sm font-bold truncate w-full text-left ${i === currentTrackIndex ? 'text-primary' : 'text-white'}`}>{t.title}</span>
+                                    {i === currentTrackIndex && <span className="text-[10px] uppercase font-bold tracking-widest opacity-60">Now Playing</span>}
+                                </div>
+                                {i === currentTrackIndex && <span className="material-symbols-outlined text-lg animate-pulse">equalizer</span>}
+                            </button>
+                        )) : (
+                            <div className="text-zinc-500 text-center mt-10 flex flex-col items-center gap-2">
+                                <span className="material-symbols-outlined text-4xl opacity-20">music_off</span>
+                                <p className="text-sm">Single Track</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }
 
 export default TesterPlayer;

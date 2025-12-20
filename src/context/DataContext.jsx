@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { auth } from '../lib/firebase';
+import { signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 
 const DataContext = createContext();
 
@@ -7,7 +9,7 @@ export const useData = () => useContext(DataContext);
 const initialArtistProfile = {
     name: "PEAKAFELLER",
     bio: "Testing new sounds for the next era.",
-    photo: "/peakafeller_profile.jpg",
+    photo: "/peakafeller_profile_final.jpg",
     socials: {
         instagram: "https://www.instagram.com/peakafeller?igsh=MWw4YjZjeDB6OTlidw%3D%3D&utm_source=qr",
         tiktok: "https://www.tiktok.com/@peakafeller_lerecycleur?_r=1&_t=ZS-92LGYgBsift",
@@ -34,6 +36,18 @@ export const DataProvider = ({ children }) => {
         const saved = localStorage.getItem('artistProfile');
         return saved ? JSON.parse(saved) : initialArtistProfile;
     });
+
+    // Authenticate Anonymously to allow Firebase Storage/Database access
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                signInAnonymously(auth)
+                    .then(() => console.log("Connected to Cloud Services (Anonymous)"))
+                    .catch(error => console.error("Cloud Connection Failed:", error));
+            }
+        });
+        return () => unsubscribe();
+    }, []);
 
     const [tracks, setTracks] = useState(() => {
         const saved = localStorage.getItem('tracks');
@@ -69,6 +83,35 @@ export const DataProvider = ({ children }) => {
         localStorage.setItem('testerSessions', JSON.stringify(testerSessions));
     }, [testerSessions]);
 
+    // Force clear legacy fake data if detected
+    useEffect(() => {
+        if (artistProfile.stats.testers === 142 && artistProfile.stats.tracks === 3) {
+            console.log("Cleaning up legacy fake stats...");
+            setArtistProfile(prev => ({
+                ...prev,
+                stats: { testers: 0, tracks: 0, score: 0 }
+            }));
+        }
+
+        const hasFakeTracks = tracks.some(t => t.title.includes("Midnight Drive") || t.title.includes("Experiment"));
+        // Only clear if it matches the specific mock data pattern AND we want to be aggressive, 
+        // but maybe the user created "Experiment" tracks? 
+        // The user complained about "fake songs".
+        // Let's specifically target "Midnight Drive" which is the known fake one.
+        if (tracks.some(t => t.title.includes("Midnight Drive"))) {
+            console.log("Cleaning up legacy fake tracks...");
+            setTracks(prev => prev.filter(t => !t.title.includes("Midnight Drive")));
+        }
+
+        // Force hard update of the photo one time to clear any old base64 or cached paths
+        const hasFixedPhoto = localStorage.getItem('has_fixed_photo_v3');
+        if (!hasFixedPhoto) {
+            console.log("Forcing profile photo update to final version...");
+            setArtistProfile(prev => ({ ...prev, photo: "/peakafeller_profile_final.jpg" }));
+            localStorage.setItem('has_fixed_photo_v3', 'true');
+        }
+    }, []); // Run once on mount
+
     const updateProfile = (newProfileData) => {
         setArtistProfile(prev => ({
             ...prev,
@@ -77,7 +120,17 @@ export const DataProvider = ({ children }) => {
     };
 
     const addTrack = (newTrack) => {
-        setTracks(prev => [...prev, { ...newTrack, id: Date.now() }]);
+        setTracks(prev => [...prev, { ...newTrack, id: Date.now(), isVisible: true }]);
+    };
+
+    const deleteTrack = (trackId) => {
+        setTracks(prev => prev.filter(t => t.id !== trackId));
+    };
+
+    const toggleTrackVisibility = (trackId) => {
+        setTracks(prev => prev.map(t =>
+            t.id === trackId ? { ...t, isVisible: !(t.isVisible ?? true) } : t
+        ));
     };
 
     const addFeedback = (newFeedback) => {
@@ -117,6 +170,8 @@ export const DataProvider = ({ children }) => {
             updateProfile,
             tracks,
             addTrack,
+            deleteTrack,
+            toggleTrackVisibility,
             inviteCode,
             feedback,
             addFeedback,

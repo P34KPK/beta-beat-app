@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useData } from '../context/DataContext';
 import ArtistBottomNav from '../components/ArtistBottomNav';
+import { storage } from '../lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const ArtistABSetup = () => {
     const navigate = useNavigate();
@@ -9,8 +11,30 @@ const ArtistABSetup = () => {
 
     // Modes: 'single' (Default) or 'album'
     const [mode, setMode] = useState('single');
+    const [uploading, setUploading] = useState(false);
+
+    const handleFileUpload = async (file, onSuccess) => {
+        if (!file) return;
+        setUploading(true);
+        try {
+            const storageRef = ref(storage, `tracks/${Date.now()}_${file.name}`);
+            const snapshot = await uploadBytes(storageRef, file);
+            const downloadURL = await getDownloadURL(snapshot.ref);
+            onSuccess(downloadURL);
+        } catch (error) {
+            console.warn("Firebase unavailable, using local fallback", error);
+            // Fallback: Use local Object URL (Works instantly but lost on refresh)
+            const localUrl = URL.createObjectURL(file);
+            onSuccess(localUrl);
+            alert("⚠️ Firebase bloqué / Erreur Upload.\n\nJ'ai chargé le fichier en MODE LOCAL temporaire.\nÇa va marcher tout de suite, mais le fichier sera perdu si vous rafraîchissez la page.");
+        } finally {
+            setUploading(false);
+        }
+    };
 
     // Single Mode States
+    const [singleTitle, setSingleTitle] = useState('');
+    const [singleCover, setSingleCover] = useState('');
     const [linkA, setLinkA] = useState('');
     const [linkB, setLinkB] = useState('');
     const [isValidA, setIsValidA] = useState(false);
@@ -23,9 +47,24 @@ const ArtistABSetup = () => {
 
     // Helper to convert Drive link to Direct Link
     const processLink = (url) => {
-        const idMatch = url.match(/\/d\/(.*?)\/|id=(.*?)(&|$)/);
-        const id = idMatch ? (idMatch[1] || idMatch[2]) : null;
-        return id ? `https://drive.google.com/uc?export=download&id=${id}` : null;
+        // Handle Google Drive
+        const driveMatch = url.match(/\/d\/(.*?)\/|id=(.*?)(&|$)/);
+        if (driveMatch) {
+            const id = driveMatch[1] || driveMatch[2];
+            return `https://drive.google.com/uc?export=download&id=${id}`;
+        }
+
+        // Handle Dropbox - Convert to raw stream
+        if (url.includes('dropbox.com')) {
+            return url.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
+        }
+
+        // Handle Direct Files
+        if (url.match(/\.(mp3|wav|m4a|aac|ogg)$/i) || url.includes('firebasestorage') || url.startsWith('blob:')) {
+            return url;
+        }
+
+        return null;
     };
 
     const handleSingleLinkChange = (url, setLink, setValid) => {
@@ -80,10 +119,10 @@ const ArtistABSetup = () => {
                 return;
             }
             const newTrack = {
-                title: `Experiment ${tracks.length + 1}`,
+                title: singleTitle || `Experiment ${tracks.length + 1}`,
                 version: "v1.0",
                 type: "Single",
-                cover: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300&auto=format&fit=crop",
+                cover: singleCover || "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300&auto=format&fit=crop",
                 active: true,
                 audioUrl: linkA,
                 isAlbum: false
@@ -137,12 +176,54 @@ const ArtistABSetup = () => {
                 <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl mb-6">
                     <p className="text-xs text-blue-200 flex gap-2">
                         <span className="material-symbols-outlined text-sm shrink-0">info</span>
-                        <span>Paste <b>Google Drive Links</b> (Share {'>'} People with link). They auto-convert.</span>
+                        <span><b>Recommended:</b> Use the <b>Upload Button</b> to host files securely in the Cloud. Or paste links.</span>
                     </p>
                 </div>
 
                 {mode === 'single' ? (
                     <div className="grid grid-cols-1 gap-6 mb-8">
+                        {/* Single Info */}
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-bold text-white ml-1">Track Title</label>
+                            <input
+                                type="text"
+                                placeholder={`Experiment ${tracks.length + 1}`}
+                                className="w-full bg-surface-dark border border-zinc-700 rounded-xl px-4 py-3 text-white focus:border-primary focus:outline-none"
+                                value={singleTitle}
+                                onChange={(e) => setSingleTitle(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between items-center ml-1">
+                                <label className="text-sm font-bold text-white">Cover Art (Optional)</label>
+                                {singleCover && singleCover.includes('drive.google.com') && <span className="text-[10px] uppercase font-bold text-green-500 bg-green-900/30 px-2 py-0.5 rounded flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">check</span>Drive Link</span>}
+                            </div>
+                            <div className={`flex items-center gap-2 bg-surface-dark border rounded-xl px-4 py-3 transition-colors ${singleCover ? 'border-green-500/50' : 'border-zinc-700 focus-within:border-primary'}`}>
+                                <label className="flex items-center gap-2 cursor-pointer bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors border border-white/5 whitespace-nowrap">
+                                    {uploading ? <span className="material-symbols-outlined text-sm animate-spin">refresh</span> : <span className="material-symbols-outlined text-sm">add_photo_alternate</span>}
+                                    <span>Cover</span>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        disabled={uploading}
+                                        onChange={(e) => handleFileUpload(e.target.files[0], setSingleCover)}
+                                    />
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="or Paste Link..."
+                                    className="w-full bg-transparent text-white focus:outline-none text-sm placeholder-zinc-600"
+                                    value={singleCover}
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        const direct = processLink(val);
+                                        setSingleCover(direct || val);
+                                    }}
+                                />
+                            </div>
+                        </div>
                         {/* Version A */}
                         <div className="flex flex-col gap-3">
                             <div className="flex justify-between items-center px-2">
@@ -150,12 +231,21 @@ const ArtistABSetup = () => {
                                 {isValidA && <span className="text-[10px] uppercase font-bold text-green-500 bg-green-900/30 px-2 py-0.5 rounded flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">check</span>Valid</span>}
                             </div>
                             <div className={`group relative flex items-center gap-3 border-2 bg-surface-dark p-2 transition-colors ${isValidA ? 'border-green-500/50' : 'border-zinc-800 focus-within:border-primary'}`}>
-                                <div className="size-10 bg-zinc-900 flex items-center justify-center shrink-0">
-                                    <span className="material-symbols-outlined text-zinc-500">link</span>
-                                </div>
+                                <label className="flex items-center gap-2 cursor-pointer bg-primary hover:bg-primary/90 text-black px-4 py-2 rounded-lg text-xs font-bold transition-colors shadow-lg shadow-primary/20 shrink-0">
+                                    {uploading ? <span className="material-symbols-outlined text-sm animate-spin">refresh</span> : <span className="material-symbols-outlined text-sm">cloud_upload</span>}
+                                    <span>UPLOAD MP3</span>
+                                    <input
+                                        type="file"
+                                        accept="audio/*"
+                                        className="hidden"
+                                        disabled={uploading}
+                                        onChange={(e) => handleFileUpload(e.target.files[0], (url) => { setLinkA(url); setIsValidA(true); })}
+                                    />
+                                </label>
                                 <input
                                     type="text"
-                                    placeholder="Paste https://drive.google.com/..."
+                                    value={linkA}
+                                    placeholder={uploading ? "Uploading..." : "or Paste Link..."}
                                     className="bg-transparent text-sm text-white w-full focus:outline-none placeholder-zinc-600"
                                     onChange={(e) => handleSingleLinkChange(e.target.value, setLinkA, setIsValidA)}
                                 />
@@ -169,12 +259,21 @@ const ArtistABSetup = () => {
                                 {isValidB && <span className="text-[10px] uppercase font-bold text-green-500 bg-green-900/30 px-2 py-0.5 rounded flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">check</span>Valid</span>}
                             </div>
                             <div className={`group relative flex items-center gap-3 border-2 bg-surface-dark p-2 transition-colors ${isValidB ? 'border-green-500/50' : 'border-zinc-800 focus-within:border-primary'}`}>
-                                <div className="size-10 bg-zinc-900 flex items-center justify-center shrink-0">
-                                    <span className="material-symbols-outlined text-zinc-500">link</span>
-                                </div>
+                                <label className="flex items-center gap-2 cursor-pointer bg-primary hover:bg-primary/90 text-black px-4 py-2 rounded-lg text-xs font-bold transition-colors shadow-lg shadow-primary/20 shrink-0">
+                                    {uploading ? <span className="material-symbols-outlined text-sm animate-spin">refresh</span> : <span className="material-symbols-outlined text-sm">cloud_upload</span>}
+                                    <span>UPLOAD MP3</span>
+                                    <input
+                                        type="file"
+                                        accept="audio/*"
+                                        className="hidden"
+                                        disabled={uploading}
+                                        onChange={(e) => handleFileUpload(e.target.files[0], (url) => { setLinkB(url); setIsValidB(true); })}
+                                    />
+                                </label>
                                 <input
                                     type="text"
-                                    placeholder="Paste Variant Drive Link..."
+                                    value={linkB}
+                                    placeholder={uploading ? "Uploading..." : "or Paste Link..."}
                                     className="bg-transparent text-sm text-white w-full focus:outline-none placeholder-zinc-600"
                                     onChange={(e) => handleSingleLinkChange(e.target.value, setLinkB, setIsValidB)}
                                 />
@@ -200,11 +299,21 @@ const ArtistABSetup = () => {
                                 <label className="text-sm font-bold text-white">Cover Art Link (Optional)</label>
                                 {albumCover && albumCover.includes('drive.google.com') && <span className="text-[10px] uppercase font-bold text-green-500 bg-green-900/30 px-2 py-0.5 rounded flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">check</span>Drive Link</span>}
                             </div>
-                            <div className={`flex items-center gap-2 bg-surface-dark border rounded-xl px-4 py-3 transition-colors ${albumCover && albumCover.includes('drive.google.com') ? 'border-green-500/50' : 'border-zinc-700 focus-within:border-primary'}`}>
-                                <span className="material-symbols-outlined text-zinc-500">image</span>
+                            <div className={`flex items-center gap-2 bg-surface-dark border rounded-xl px-4 py-3 transition-colors ${albumCover ? 'border-green-500/50' : 'border-zinc-700 focus-within:border-primary'}`}>
+                                <label className="flex items-center gap-2 cursor-pointer bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors border border-white/5 whitespace-nowrap">
+                                    {uploading ? <span className="material-symbols-outlined text-sm animate-spin">refresh</span> : <span className="material-symbols-outlined text-sm">add_photo_alternate</span>}
+                                    <span>Cover</span>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        disabled={uploading}
+                                        onChange={(e) => handleFileUpload(e.target.files[0], setAlbumCover)}
+                                    />
+                                </label>
                                 <input
                                     type="text"
-                                    placeholder="Paste Drive Link or Image URL"
+                                    placeholder="or Paste Link..."
                                     className="w-full bg-transparent text-white focus:outline-none text-sm placeholder-zinc-600"
                                     value={albumCover}
                                     onChange={(e) => {
@@ -250,10 +359,22 @@ const ArtistABSetup = () => {
                                         )}
                                     </div>
                                     <div className={`flex items-center gap-2 bg-black/30 rounded-lg px-2 py-1.5 border ${track.valid ? 'border-green-500/30' : 'border-transparent'} ml-8`}>
-                                        <span className={`material-symbols-outlined text-sm ${track.valid ? 'text-green-500' : 'text-zinc-600'}`}>link</span>
+                                        <label className="flex items-center gap-1 cursor-pointer bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-white transition-colors">
+                                            {uploading ? <span className="material-symbols-outlined text-sm animate-spin">refresh</span> : <span className="material-symbols-outlined text-sm">cloud_upload</span>}
+                                            <span>Upload</span>
+                                            <input
+                                                type="file"
+                                                accept="audio/*"
+                                                className="hidden"
+                                                disabled={uploading}
+                                                onChange={(e) => handleFileUpload(e.target.files[0], (url) => updateAlbumTrack(track.id, 'url', url))}
+                                            />
+                                        </label>
+                                        <div className="w-[1px] h-4 bg-white/10 mx-1"></div>
                                         <input
                                             type="text"
-                                            placeholder="Paste Drive Link..."
+                                            value={track.url || ''}
+                                            placeholder={uploading ? "Uploading..." : "or Paste Link->"}
                                             className="flex-1 bg-transparent text-xs text-zinc-300 focus:outline-none"
                                             onChange={(e) => updateAlbumTrack(track.id, 'url', e.target.value)}
                                         />

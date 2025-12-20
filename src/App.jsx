@@ -2,6 +2,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import LandingPage from './pages/LandingPage';
 import ArtistDashboard from './pages/ArtistDashboard';
+import ArtistLogin from './pages/ArtistLogin';
 import ArtistTracks from './pages/ArtistTracks';
 import ArtistFeedback from './pages/ArtistFeedback';
 import ArtistABSetup from './pages/ArtistABSetup';
@@ -26,6 +27,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
 
           {/* Artist Flows */}
+          <Route path="/artist-login" element={<ArtistLogin />} />
           <Route path="/artist-dashboard" element={<ArtistDashboard />} />
           <Route path="/artist-tracks" element={<ArtistTracks />} />
           <Route path="/artist-feedback" element={<ArtistFeedback />} />

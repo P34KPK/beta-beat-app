@@ -22,7 +22,7 @@ const LandingPage = () => {
 
                 <div className="w-full flex flex-col items-center justify-end pb-8 gap-6">
                     {/* Demo Navigation Splits */}
-                    <button onClick={() => navigate('/artist-dashboard')} className="w-full max-w-[400px] h-14 bg-primary hover:bg-[#ff9029] active:scale-[0.98] transition-all duration-200 rounded-full flex items-center justify-center shadow-[0_8px_30px_rgb(242,127,13,0.3)]">
+                    <button onClick={() => navigate('/artist-login')} className="w-full max-w-[400px] h-14 bg-primary hover:bg-[#ff9029] active:scale-[0.98] transition-all duration-200 rounded-full flex items-center justify-center shadow-[0_8px_30px_rgb(242,127,13,0.3)]">
                         <span className="text-background-dark font-bold text-lg tracking-wide">Login as Artist</span>
                     </button>
                     <button onClick={() => navigate('/tester-access')} className="w-full max-w-[400px] h-14 bg-white/10 hover:bg-white/20 active:scale-[0.98] transition-all duration-200 rounded-full flex items-center justify-center border border-white/10">

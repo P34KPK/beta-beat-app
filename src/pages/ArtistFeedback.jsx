@@ -1,7 +1,28 @@
 import { useNavigate } from 'react-router-dom';
+import { useData } from '../context/DataContext';
+
+const timeAgo = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + "y ago";
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + "mo ago";
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + "d ago";
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + "h ago";
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + "m ago";
+    return Math.floor(seconds) + "s ago";
+};
 
 const ArtistFeedback = () => {
     const navigate = useNavigate();
+    const { feedback } = useData();
     return (
         <div className="relative flex h-full w-full flex-col overflow-x-hidden pb-24 max-w-md mx-auto min-h-screen">
             <header className="sticky top-0 z-40 bg-background-dark/80 backdrop-blur-md border-b border-white/5">
@@ -25,42 +46,39 @@ const ArtistFeedback = () => {
             </header>
 
             <div className="flex flex-col w-full">
-                {/* Comment 1 */}
-                <div className="flex w-full flex-row items-start justify-start gap-4 p-5 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                    <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-12 h-12 shrink-0 border border-white/10" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuAn46DrDjwJbu_aF8qhzKnz2S0aHMax6HAA8sXj--xD2f_F2F9Sdpd-T-v1yv69VaGpIu9XKS0D9CnWI8079SrxnUJ0LXOI4fN_hfnA-lsxdu-gHBQYocUwedhQ67Y-oOSII0ZH2GOGGZezduBGKzwlmpbBYn3H-Huug8oWnU__mXeDcZXWi-zZ_F-JTk2LjZ3B69i_aFyR1qX7C1_mZNj6aPdPUVTywnCp7MA8w9BrL9hhIVATST4NfTWxpHrH-D1sN46B3PRa6no0")' }}></div>
-                    <div className="flex h-full flex-1 flex-col items-start justify-start gap-1">
-                        <div className="flex w-full flex-row items-start justify-between">
-                            <div className="flex flex-col">
-                                <p className="text-white text-base font-bold leading-normal tracking-wide">Alex M.</p>
-                                <div className="mt-1 flex items-center">
-                                    <span className="bg-white/10 text-gray-300 text-[10px] uppercase font-bold px-2 py-0.5 rounded tracking-wider">Midnight Drive (Ver A)</span>
-                                </div>
-                            </div>
-                            <p className="text-primary text-xs font-bold leading-normal">15m ago</p>
-                        </div>
-                        <p className="text-gray-300 text-sm font-normal leading-relaxed mt-2">
-                            The bass drop at 2:15 is insane, but the vocals feel a bit buried in the mix during the chorus. Love the artwork!
-                        </p>
+                {feedback.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20 px-4 text-center opacity-50">
+                        <span className="material-symbols-outlined text-4xl mb-2">chat_bubble_outline</span>
+                        <p>No feedback yet.</p>
                     </div>
-                </div>
-                {/* Comment 2 */}
-                <div className="flex w-full flex-row items-start justify-start gap-4 p-5 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                    <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-12 h-12 shrink-0 border border-white/10" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuCaU9SUaM2mZC8TbZmeHS-kDJtgm_LuVxLfyrXOW3hdvtNjzmR51v2J-BEAXIVvcoyzUK0In23X54CE8yZsn8BJthjf9rIEipTqv7nrcc5XFM5NztndzfGVdTwCTqa4nz443TTRbA7yrEP_zWO-CBeluRwwPCV4CJrDSWolscd634NinksRHy3MK6e60r2yiwdqxj68fvz2EwuEys3lrrJ9AiO3iCWswVEcG7oZPD-FmAL6J3e1LR_NtohLJGFnq345wpmFENA8NstE")' }}></div>
-                    <div className="flex h-full flex-1 flex-col items-start justify-start gap-1">
-                        <div className="flex w-full flex-row items-start justify-between">
-                            <div className="flex flex-col">
-                                <p className="text-white text-base font-bold leading-normal tracking-wide">Sarah J.</p>
-                                <div className="mt-1 flex items-center">
-                                    <span className="bg-white/10 text-gray-300 text-[10px] uppercase font-bold px-2 py-0.5 rounded tracking-wider">Midnight Drive (Ver B)</span>
-                                </div>
+                ) : (
+                    feedback.slice().reverse().map((item) => (
+                        <div key={item.id} className="flex w-full flex-row items-start justify-start gap-4 p-5 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-12 h-12 shrink-0 border border-white/10 bg-surface-dark flex items-center justify-center">
+                                <span className="material-symbols-outlined text-zinc-600">person</span>
                             </div>
-                            <p className="text-primary text-xs font-bold leading-normal">2h ago</p>
+                            <div className="flex h-full flex-1 flex-col items-start justify-start gap-1">
+                                <div className="flex w-full flex-row items-start justify-between">
+                                    <div className="flex flex-col">
+                                        <p className="text-white text-base font-bold leading-normal tracking-wide">Tester</p>
+                                        <div className="mt-1 flex items-center gap-2">
+                                            <span className="bg-white/10 text-gray-300 text-[10px] uppercase font-bold px-2 py-0.5 rounded tracking-wider">{item.trackTitle}</span>
+                                            <div className="flex">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <span key={i} className={`material-symbols-outlined text-[12px] ${i < item.rating ? 'text-primary' : 'text-zinc-700'} filled`} style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p className="text-primary text-xs font-bold leading-normal">{timeAgo(item.date)}</p>
+                                </div>
+                                <p className="text-gray-300 text-sm font-normal leading-relaxed mt-2">
+                                    {item.comment}
+                                </p>
+                            </div>
                         </div>
-                        <p className="text-gray-300 text-sm font-normal leading-relaxed mt-2">
-                            Version B feels much punchier. Definitely the way to go for the single release.
-                        </p>
-                    </div>
-                </div>
+                    ))
+                )}
             </div>
         </div>
     )
